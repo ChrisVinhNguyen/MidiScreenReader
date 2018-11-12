@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -58,9 +59,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
 
 public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -71,8 +75,13 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyDxC9Btvkfi2SH_74NpRL-n5tmFtn-2J0Q";
 
+    TextToSpeech tts;
+
     @BindView(R.id.takePicture)
     Button takePicture;
+
+    @BindView(R.id.visionSpeechButton)
+    Button visionSpeechButton;
 
     @BindView(R.id.imageProgress)
     ProgressBar imageUploadProgress;
@@ -124,6 +133,33 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
+        visionSpeechButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                final TextView ettext = (TextView) findViewById(R.id.visionAPIData);
+                String message = ettext.getText().toString().trim();
+                saySomething(message);
+            }
+
+        });
+
+        tts = new TextToSpeech(VisionAPI.this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                // TODO Auto-generated method stub
+                if(status == TextToSpeech.SUCCESS){
+                    int result=tts.setLanguage(Locale.US);
+                    if(result==TextToSpeech.LANG_MISSING_DATA ||
+                            result==TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.e("error", "This Language is not supported");
+                    }
+                }
+                else
+                    Log.e("error", "Initilization Failed!");
+            }
+        });
+        tts.setLanguage(Locale.US);
     }
 
     @Override
@@ -363,4 +399,14 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
         return image;
     }
 
+    private void saySomething(String msg){
+        if(msg.length()>getMaxSpeechInputLength()){
+
+            msg = msg.substring(0,getMaxSpeechInputLength()-2);
+        }
+
+        tts.speak(msg,TextToSpeech.QUEUE_FLUSH,null,null);
+
+
+    }
 }

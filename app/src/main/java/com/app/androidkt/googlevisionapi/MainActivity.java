@@ -23,4 +23,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TextToSpeechActivity.class);
         startActivity(intent);
     }
+
+    public void openCameraListenerActivity(View view) {
+        Intent intent = new Intent(this, CameraListenerActivity.class);
+        startActivity(intent);
+    }
 }

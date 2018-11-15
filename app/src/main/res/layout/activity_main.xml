@@ -20,4 +20,11 @@
         android:layout_height="wrap_content"
         android:onClick="openTextToSpeechActivity"
         android:text="@string/activity_text_to_speech" />
+
+    <Button
+        android:id="@+id/openCameraListenerActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="openCameraListenerActivity"
+        android:text="Camera Listener" />
 </LinearLayout>

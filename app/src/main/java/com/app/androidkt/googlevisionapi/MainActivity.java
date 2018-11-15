@@ -28,4 +28,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CameraListenerActivity.class);
         startActivity(intent);
     }
+    public void openTakePictureAutoActivity(View view) {
+        Intent intent = new Intent(this, TakePictureAuto.class);
+        startActivity(intent);
+    }
 }

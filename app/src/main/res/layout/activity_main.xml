@@ -27,4 +27,11 @@
         android:layout_height="wrap_content"
         android:onClick="openCameraListenerActivity"
         android:text="Camera Listener" />
+
+    <Button
+        android:id="@+id/openTakePictureAutoActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="openTakePictureAutoActivity"
+        android:text="Take Picture Auto" />
 </LinearLayout>

@@ -56,12 +56,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import android.view.View.OnTouchListener;
+import android.view.MotionEvent;
+import android.annotation.SuppressLint;
 
 import butterknife.BindView;
 
 import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
 
-public class CameraListenerActivity extends Activity implements CvCameraViewListener2 {
+public class CameraListenerActivity extends Activity implements CvCameraViewListener2, OnTouchListener {
     private static final String TAG = "OCVSample::CameraListenerActivity";
 
     private CustomCameraView mOpenCvCameraView;
@@ -98,6 +101,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
+                    mOpenCvCameraView.setOnTouchListener(CameraListenerActivity.this);
                 } break;
                 default:
                 {
@@ -158,6 +162,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     public void onPause()
     {
         super.onPause();
+        // shut the text to speech up
+        tts.speak(" ",TextToSpeech.QUEUE_FLUSH,null,null);
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -345,5 +351,13 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     }
 
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Log.i(TAG,"onTouch event");
+        Toast.makeText(this, "NO TOUCHIE", Toast.LENGTH_SHORT).show();
+        return false;
+    }
 }
+
 

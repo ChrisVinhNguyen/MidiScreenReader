@@ -61,29 +61,19 @@ import butterknife.BindView;
 import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
 
 public class CameraListenerActivity extends Activity implements CvCameraViewListener2 {
-    private static final String TAG = "OCVSample::Activity";
+    private static final String TAG = "OCVSample::CameraListenerActivity";
 
     private CustomCameraView mOpenCvCameraView;
-    private boolean              mIsJavaCamera = true;
-    private MenuItem             mItemSwitchCamera = null;
-
-    private static final int RECORD_REQUEST_CODE = 101;
-    private static final int CAMERA_REQUEST_CODE = 102;
-
     private static final String CLOUD_VISION_API_KEY = "AIzaSyDxC9Btvkfi2SH_74NpRL-n5tmFtn-2J0Q";
 
-    @BindView(R.id.visionAPIData)
-    TextView visionAPIData;
-
     TextToSpeech tts;
-    private Feature feature;
-    Uri image;
-    String mCameraFileName;
-    private Mat bitmapMatrix;
-    private String[] visionAPI = new String[]{"TEXT_DETECTION"};
 
+    //defines the features we're using with the api
+    private Feature feature;
+    private String[] visionAPI = new String[]{"TEXT_DETECTION"};
     private String api = visionAPI[0];
 
+    // initialization for open cv
     static {
         if (!OpenCVLoader.initDebug()) {
             Log.i("opencv", "OpenCV initialized failed");
@@ -92,7 +82,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         }
     }
 
-
+    // initialization for open cv
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -120,22 +110,21 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         setContentView(R.layout.activity_camera_listener);
 
+        // first, set up feature list for api (currently only looking for text response)
         feature = new Feature();
         feature.setType(visionAPI[0]);
         feature.setMaxResults(10);
 
+        // set up camera view
         mOpenCvCameraView = (CustomCameraView) findViewById(R.id.java_surface_view);
 
+        // set resolution for camera view
         mOpenCvCameraView.setMinimumHeight(240);
         mOpenCvCameraView.setMinimumWidth(320);
         mOpenCvCameraView.setMaxFrameSize(320, 240);
 
-        //mOpenCvCameraView.setMinimumHeight(320);
-        //mOpenCvCameraView.setMinimumWidth(240);
-        //mOpenCvCameraView.setMaxFrameSize(320, 240);
-
+        // make camera view visible and start processing frames
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -166,19 +155,30 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             mOpenCvCameraView.disableView();
     }
 
+    // is called when camera view starts
     public void onCameraViewStarted(int width, int height) {
     }
 
+    // is called when camera view stops
     public void onCameraViewStopped() {
     }
 
+    // this function is called for every frame and handles the processing of each frame
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+
+        // first convert the input frame to a matrix
         Mat frameMat = inputFrame.rgba();
+
+        // initialize a bitmap, convert the frame matrix into a bitmap, the perform pre-processing on the bitmap
         Bitmap frameBitmap = Bitmap.createBitmap(frameMat.cols(), frameMat.rows(), Bitmap.Config.ARGB_8888);
-        frameBitmap = processBitmap(frameBitmap);
         Utils.matToBitmap(frameMat, frameBitmap);
+        frameBitmap = processBitmap(frameBitmap);
+
+        // calls the cloudvision api on the processed bitmap
         callCloudVision(frameBitmap,feature);
 
+        // sleep for 5 seconds, to wait a bit for the api response before sending the next frame in order to avoid sending too many frames
+        // TODO: may need to update to wait for api response instead of waiting for 5 seconds every time, responses and new frames may become out of sync
         try
         {
             Thread.sleep(5000);
@@ -188,23 +188,34 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             Thread.currentThread().interrupt();
         }
 
+        // convert bitmap back to matrix to return
+        Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
 
+    // perform image pre-processing on bitmap
+    private Bitmap processBitmap(Bitmap bitmap)
+    {
+        // TODO:: move image pre-processing code from VisionAPI activity to here
+        return bitmap;
+    }
+
+    // calls the cloud vision api to perform ocr on the image
     public void callCloudVision(final Bitmap bitmap, final Feature feature) {
-        //imageUploadProgress.setVisibility(View.VISIBLE);
+
+        // get feature list (currently just text detection)
         final List<Feature> featureList = new ArrayList<>();
         featureList.add(feature);
 
         final List<AnnotateImageRequest> annotateImageRequests = new ArrayList<>();
 
+        // setup and encode bitmap
         AnnotateImageRequest annotateImageReq = new AnnotateImageRequest();
         annotateImageReq.setFeatures(featureList);
         annotateImageReq.setImage(getImageEncodeImage(bitmap));
         annotateImageRequests.add(annotateImageReq);
 
-
-
+        // call api in background, get a formatted response containing the text and text bounding boxes
         new AsyncTask<Object, Void, String>() {
             @Override
             protected String doInBackground(Object... params) {
@@ -234,20 +245,21 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 }
                 return "Cloud Vision API request failed. Check logs for details.";
             }
-
+            // upon api response, display formatted response
             protected void onPostExecute(String result) {
-                //if (result != "Nothing Found") {
-                    Context context = getApplicationContext();
-                    int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, result, duration);
-                    toast.show();
-                //}
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, result, duration);
+                toast.show();
+
             }
         }.execute();
 
     }
 
+    //converts bitmap to JPEG for input into cloud vision
     @NonNull
     private Image getImageEncodeImage(Bitmap bitmap) {
         Image base64EncodedImage = new Image();
@@ -262,6 +274,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return base64EncodedImage;
     }
 
+    // formats entire api response data into string
+    // calls formatAnootation(List<EntityAnnotation> entityAnnotation)
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
 
         AnnotateImageResponse imageResponses = response.getResponses().get(0);
@@ -278,7 +292,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return message;
     }
 
-
+    // formats individual element of api response data into string
     private String formatAnnotation(List<EntityAnnotation> entityAnnotation) {
         String message = "";
 
@@ -293,6 +307,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return message;
     }
 
+    // read a string out loung
     private void saySomething(String msg){
         if(msg.length()>getMaxSpeechInputLength()){
 
@@ -302,10 +317,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         tts.speak(msg,TextToSpeech.QUEUE_FLUSH,null,null);
 
     }
-
-    private Bitmap processBitmap(Bitmap bitmap)
-    {
-        return bitmap;
-    }
+    
 }
 

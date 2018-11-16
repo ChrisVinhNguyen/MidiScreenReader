@@ -55,6 +55,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 
@@ -67,6 +68,12 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     private static final String CLOUD_VISION_API_KEY = "AIzaSyDxC9Btvkfi2SH_74NpRL-n5tmFtn-2J0Q";
 
     TextToSpeech tts;
+
+    // variables to control the quality and rate of the image passed to the api;
+    int width = 640;
+    int height = 480;
+    int quality = 50;
+    int sleep_time = 2000;
 
     //defines the features we're using with the api
     private Feature feature;
@@ -115,13 +122,32 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         feature.setType(visionAPI[0]);
         feature.setMaxResults(10);
 
+        //initialize text to speech engine
+        tts = new TextToSpeech(CameraListenerActivity.this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                // TODO Auto-generated method stub
+                if(status == TextToSpeech.SUCCESS){
+                    int result=tts.setLanguage(Locale.US);
+                    if(result==TextToSpeech.LANG_MISSING_DATA ||
+                            result==TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.e("error", "This Language is not supported");
+                    }
+                }
+                else
+                    Log.e("error", "Initilization Failed!");
+            }
+        });
+        tts.setLanguage(Locale.US);
+
         // set up camera view
         mOpenCvCameraView = (CustomCameraView) findViewById(R.id.java_surface_view);
 
         // set resolution for camera view
-        mOpenCvCameraView.setMinimumHeight(240);
-        mOpenCvCameraView.setMinimumWidth(320);
-        mOpenCvCameraView.setMaxFrameSize(320, 240);
+        mOpenCvCameraView.setMinimumHeight(height);
+        mOpenCvCameraView.setMinimumWidth(width);
+        mOpenCvCameraView.setMaxFrameSize(width, height);
 
         // make camera view visible and start processing frames
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -181,7 +207,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         // TODO: may need to update to wait for api response instead of waiting for 5 seconds every time, responses and new frames may become out of sync
         try
         {
-            Thread.sleep(5000);
+            Thread.sleep(sleep_time);
         }
         catch(InterruptedException ex)
         {
@@ -253,7 +279,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
                 Toast toast = Toast.makeText(context, result, duration);
                 toast.show();
-
             }
         }.execute();
 
@@ -266,7 +291,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         // Convert the bitmap to a JPEG
         // Just in case it's a format that Android understands but Cloud Vision
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
 
         // Base64 encode the JPEG
@@ -275,7 +300,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     }
 
     // formats entire api response data into string
-    // calls formatAnootation(List<EntityAnnotation> entityAnnotation)
+    // calls formatAnnotation(List<EntityAnnotation> entityAnnotation)
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
 
         AnnotateImageResponse imageResponses = response.getResponses().get(0);
@@ -300,6 +325,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             for (EntityAnnotation entity : entityAnnotation) {
                 message = message + " Text:   " + entity.getDescription() + " Bounding box " + entity.getBoundingPoly();
                 message += "\n";
+                //say the text here
+                saySomething(entity.getDescription());
             }
         } else {
             message = "Nothing Found";
@@ -307,16 +334,16 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return message;
     }
 
-    // read a string out loung
+    // read a string out loud
     private void saySomething(String msg){
         if(msg.length()>getMaxSpeechInputLength()){
 
             msg = msg.substring(0,getMaxSpeechInputLength()-2);
         }
 
-        tts.speak(msg,TextToSpeech.QUEUE_FLUSH,null,null);
+        tts.speak(msg,TextToSpeech.QUEUE_ADD,null,null);
 
     }
-    
+
 }
 

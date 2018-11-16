@@ -2,6 +2,7 @@ package com.app.androidkt.googlevisionapi;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -75,7 +77,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     TextToSpeech tts;
     private Feature feature;
-    private Bitmap bitmap;
     Uri image;
     String mCameraFileName;
     private Mat bitmapMatrix;
@@ -173,10 +174,11 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         Mat frameMat = inputFrame.rgba();
-        bitmap = Bitmap.createBitmap(frameMat.cols(), frameMat.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(frameMat, bitmap);
+        Bitmap frameBitmap = Bitmap.createBitmap(frameMat.cols(), frameMat.rows(), Bitmap.Config.ARGB_8888);
+        frameBitmap = processBitmap(frameBitmap);
+        Utils.matToBitmap(frameMat, frameBitmap);
+        callCloudVision(frameBitmap,feature);
 
-        callCloudVision(bitmap,feature);
         try
         {
             Thread.sleep(5000);
@@ -299,7 +301,11 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         tts.speak(msg,TextToSpeech.QUEUE_FLUSH,null,null);
 
+    }
 
+    private Bitmap processBitmap(Bitmap bitmap)
+    {
+        return bitmap;
     }
 }
 

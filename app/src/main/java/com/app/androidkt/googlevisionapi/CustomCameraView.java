@@ -21,6 +21,15 @@ public class CustomCameraView extends JavaCameraView implements PictureCallback 
         super(context, attrs);
     }
 
+    public Camera.Parameters getParameters() {
+        return mCamera.getParameters();
+    }
+
+    public void setParameters(Camera.Parameters parameters) {
+        mCamera.setParameters(parameters);
+    }
+
+
     public List<String> getEffectList() {
         return mCamera.getParameters().getSupportedColorEffects();
     }

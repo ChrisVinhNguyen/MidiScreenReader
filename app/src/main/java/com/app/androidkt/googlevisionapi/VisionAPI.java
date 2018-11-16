@@ -99,7 +99,7 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
     Uri image;
     String mCameraFileName;
     private Mat bitmapMatrix;
-    private String[] visionAPI = new String[]{"TEXT_DETECTION", "LOGO_DETECTION", "SAFE_SEARCH_DETECTION", "IMAGE_PROPERTIES", "LABEL_DETECTION"};
+    private String[] visionAPI = new String[]{"TEXT_DETECTION"};
 
     private String api = visionAPI[0];
 
@@ -245,17 +245,6 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    //@Override
-    //public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-    //    if (requestCode == RECORD_REQUEST_CODE) {
-    //       if (grantResults.length == 0 && grantResults[0] == PackageManager.PERMISSION_DENIED
-    //              && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-    //         finish();
-    //    } else {
-    //      takePicture.setVisibility(View.VISIBLE);
-    //}
-    //}
-    //}
 
     private void callCloudVision(final Bitmap bitmap, final Feature feature) {
         imageUploadProgress.setVisibility(View.VISIBLE);

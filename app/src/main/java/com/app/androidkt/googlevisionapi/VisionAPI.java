@@ -398,4 +398,41 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
 
 
     }
+
+    public int findPeaks(double[] data, int[] peaks, int width) {
+        int peakCount = 0;
+        int maxp = 0;
+        int mid = 0;
+        int end = data.length;
+        while (mid < end) {
+            int i = mid - width;
+            if (i < 0)
+                i = 0;
+            int stop = mid + width + 1;
+            if (stop > data.length)
+                stop = data.length;
+            maxp = i;
+            for (i++; i < stop; i++)
+                if (data[i] > data[maxp])
+                    maxp = i;
+            if (maxp == mid) {
+                int j;
+                for (j = peakCount; j > 0; j--) {
+                    if (data[maxp] <= data[peaks[j-1]])
+                        break;
+                    else if (j < peaks.length)
+                        peaks[j] = peaks[j-1];
+                }
+                if (j != peaks.length)
+                    peaks[j] = maxp;
+                if (peakCount != peaks.length)
+                    peakCount++;
+            }
+            mid++;
+        }
+        return peakCount;
+    } // findPeaks()
+
+
+
 }

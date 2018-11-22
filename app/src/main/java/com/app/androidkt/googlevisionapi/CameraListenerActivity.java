@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import org.opencv.android.BaseLoaderCallback;
@@ -54,6 +55,8 @@ import com.google.api.services.vision.v1.model.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import android.view.View.OnTouchListener;
@@ -63,6 +66,7 @@ import android.annotation.SuppressLint;
 import butterknife.BindView;
 
 import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
+import static java.lang.Math.abs;
 
 public class CameraListenerActivity extends Activity implements CvCameraViewListener2, OnTouchListener {
     private static final String TAG = "OCVSample::CameraListenerActivity";
@@ -73,10 +77,12 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     TextToSpeech tts;
 
     // variables to control the quality and rate of the image passed to the api;
-    int width = 640;
-    int height = 480;
+    int width = 1920;
+    int height = 1080;
     int quality = 50;
     int sleep_time = 2000;
+    double sigmaKernBefore = .9;
+    double sigmaKernAfter = .3;
 
     //defines the features we're using with the api
     private Feature feature;
@@ -199,12 +205,12 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
         // first convert the input frame to a matrix
-        Mat frameMat = inputFrame.rgba();
+        Mat frameMat = inputFrame.gray();
 
         // initialize a bitmap, convert the frame matrix into a bitmap, the perform pre-processing on the bitmap
         Bitmap frameBitmap = Bitmap.createBitmap(frameMat.cols(), frameMat.rows(), Bitmap.Config.ARGB_8888);
+        processBitmap(frameMat);
         Utils.matToBitmap(frameMat, frameBitmap);
-        frameBitmap = processBitmap(frameBitmap);
 
         // calls the cloudvision api on the processed bitmap
         callCloudVision(frameBitmap,feature);
@@ -226,10 +232,57 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     }
 
     // perform image pre-processing on bitmap
-    private Bitmap processBitmap(Bitmap bitmap)
+    private void processBitmap(Mat bitmapMatrix)
     {
-        // TODO:: move image pre-processing code from VisionAPI activity to here
-        return bitmap;
+        int kernSize = (int) (2 * Math.ceil(2 * sigmaKernBefore) + 1);
+        Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaKernBefore);
+
+        int rows=bitmapMatrix.rows();
+        int cols=bitmapMatrix.cols();
+        double []grayScaleColour=new double[256];
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++) {
+                double[] value=bitmapMatrix.get(i,j);
+                int test =(int)value[0];
+                if(test>=100)
+                    grayScaleColour[test]++;
+            }
+        }
+        for(int i=0;i<255;i++){
+            Log.i(TAG, "processBitmap:"+i+",val="+grayScaleColour[i]);
+        }
+        int []peaks=new int[255];
+        findPeaks(grayScaleColour,peaks,20);
+        Arrays.sort(peaks);
+        int firstPeak=0;
+        int secondPeak=0;
+
+        if(peaks.length-1 >=0)
+            firstPeak=peaks[peaks.length-1];
+        if(peaks.length-2 >=0)
+            secondPeak=peaks[peaks.length-2];
+
+
+        int difftomid=(abs(firstPeak-secondPeak)/2);
+        int cutoff=(Math.min(firstPeak,secondPeak)+difftomid+difftomid/12);
+
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++) {
+                double[] value=bitmapMatrix.get(i,j);
+                int test =(int)value[0];
+                value[0]=255;
+                if(test>=cutoff)
+                    value[0]=255;
+                else
+                    value[0]=0;
+                bitmapMatrix.put(i,j,value);
+            }
+        }
+        kernSize = (int) (2 * Math.ceil(2 * sigmaKernAfter) + 1);
+        Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaKernAfter);
+
+
+
     }
 
     // calls the cloud vision api to perform ocr on the image
@@ -358,6 +411,45 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         Toast.makeText(this, "NO TOUCHIE", Toast.LENGTH_SHORT).show();
         return false;
     }
+
+
+    public int findPeaks(double[] data, int[] peaks, int width) {
+        int peakCount = 0;
+        int maxp = 0;
+        int mid = 0;
+        int end = data.length;
+        while (mid < end) {
+            int i = mid - width;
+            if (i < 0)
+                i = 0;
+            int stop = mid + width + 1;
+            if (stop > data.length)
+                stop = data.length;
+            maxp = i;
+            for (i++; i < stop; i++)
+                if (data[i] > data[maxp])
+                    maxp = i;
+            if (maxp == mid) {
+                int j;
+                for (j = peakCount; j > 0; j--) {
+                    if (data[maxp] <= data[peaks[j-1]])
+                        break;
+                    else if (j < peaks.length)
+                        peaks[j] = peaks[j-1];
+                }
+                if (j != peaks.length)
+                    peaks[j] = maxp;
+                if (peakCount != peaks.length)
+                    peakCount++;
+            }
+            mid++;
+        }
+        return peakCount;
+    } // findPeaks()
+
+
+
+
 }
 
 

@@ -1,13 +1,13 @@
 package com.app.androidkt.googlevisionapi;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.hardware.Camera;
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
+
 import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,19 +23,17 @@ import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import android.support.v4.view.GestureDetectorCompat;
+
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.hardware.Camera.Size;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -52,6 +50,14 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,20 +65,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import android.view.View.OnTouchListener;
-import android.view.MotionEvent;
-import android.annotation.SuppressLint;
-
-import butterknife.BindView;
 
 import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
 import static java.lang.Math.abs;
 
-public class CameraListenerActivity extends Activity implements CvCameraViewListener2, OnTouchListener {
+public class CameraListenerActivity extends Activity implements CvCameraViewListener2, OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     private static final String TAG = "OCVSample::CameraListenerActivity";
 
     private CustomCameraView mOpenCvCameraView;
     private static final String CLOUD_VISION_API_KEY = "AIzaSyDxC9Btvkfi2SH_74NpRL-n5tmFtn-2J0Q";
+
+    private static final String DEBUG_TAG = "Gestures";
+    private GestureDetectorCompat mDetector;
 
     TextToSpeech tts;
 
@@ -84,10 +88,14 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     double sigmaKernBefore = .9;
     double sigmaKernAfter = .3;
 
+    float initialX, initialY;
+
     //defines the features we're using with the api
     private Feature feature;
     private String[] visionAPI = new String[]{"TEXT_DETECTION"};
     private String api = visionAPI[0];
+
+    private BatchAnnotateImagesResponse responseFromApi;
 
     // initialization for open cv
     static {
@@ -108,6 +116,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                     mOpenCvCameraView.setOnTouchListener(CameraListenerActivity.this);
+                    mDetector = new GestureDetectorCompat(CameraListenerActivity.this,CameraListenerActivity.this);
+                    mDetector.setOnDoubleTapListener(CameraListenerActivity.this);
                 } break;
                 default:
                 {
@@ -322,6 +332,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                     Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
                     annotateRequest.setDisableGZipContent(true);
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
+                    responseFromApi = response;
                     return convertResponseToString(response);
                 } catch (GoogleJsonResponseException e) {
                     Log.d(TAG, "failed to make API request because " + e.getContent());
@@ -336,8 +347,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, result, duration);
-                toast.show();
+//                Toast toast = Toast.makeText(context, result, duration);
+//                toast.show();
             }
         }.execute();
 
@@ -385,7 +396,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 message = message + " Text:   " + entity.getDescription() + " Bounding box " + entity.getBoundingPoly();
                 message += "\n";
                 //say the text here
-                saySomething(entity.getDescription());
+//                saySomething(entity.getDescription());
             }
         } else {
             message = "Nothing Found";
@@ -401,17 +412,16 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         }
 
         tts.speak(msg,TextToSpeech.QUEUE_ADD,null,null);
-
     }
-
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Log.i(TAG,"onTouch event");
-        Toast.makeText(this, "NO TOUCHIE", Toast.LENGTH_SHORT).show();
+        if (this.mDetector.onTouchEvent(event)) {
+            Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
+            return true;
+        }
         return false;
     }
-
 
     public int findPeaks(double[] data, int[] peaks, int width) {
         int peakCount = 0;
@@ -447,9 +457,98 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return peakCount;
     } // findPeaks()
 
+    @Override
+    public boolean onDown(MotionEvent event) {
+        Toast.makeText(this,"onDown: " + event.toString(), Toast.LENGTH_SHORT).show();
+        convertResponseStringFromGesture(responseFromApi, "description");
+        return true;
+    }
 
+    @Override
+    public boolean onFling(MotionEvent event1, MotionEvent event2,
+                           float velocityX, float velocityY) {
+        Toast.makeText(this,"onFling: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
 
+    @Override
+    public void onLongPress(MotionEvent event) {
+        Toast.makeText(this,"onLongPress: " + event.toString(), Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX,
+                            float distanceY) {
+        Toast.makeText(this,"onScroll: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent event) {
+        Toast.makeText(this,"onShowPress: " + event.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent event) {
+//        Toast.makeText(this,"onSingleTapUp: " + event.toString(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent event) {
+        Toast.makeText(this,"onDoubleTap: " + event.toString(), Toast.LENGTH_SHORT).show();
+        convertResponseStringFromGesture(responseFromApi, "bounding");
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) {
+        Toast.makeText(this,"onDoubleTapEvent: " + event.toString(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+//        Toast.makeText(this,"onSingleTapConfirmed: " + event.toString(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    private String convertResponseStringFromGesture(BatchAnnotateImagesResponse response, String option) {
+
+        AnnotateImageResponse imageResponses = response.getResponses().get(0);
+
+        List<EntityAnnotation> entityAnnotations;
+
+        String message = "";
+        switch (api) {
+            case "TEXT_DETECTION":
+                entityAnnotations = imageResponses.getTextAnnotations();
+                message = formatBoundingBoxAnnotation(entityAnnotations, option);
+                break;
+        }
+        return message;
+    }
+
+    // formats individual element of api response data into string
+    private String formatBoundingBoxAnnotation(List<EntityAnnotation> entityAnnotation, String option) {
+        String message = "";
+
+        if (entityAnnotation != null) {
+            for (EntityAnnotation entity : entityAnnotation) {
+                message = message + " Text:   " + entity.getDescription() + " Bounding box " + entity.getBoundingPoly();
+                message += "\n";
+
+                if (option == "description") {
+                    saySomething(entity.getDescription());
+                } else if (option == "bounding") {
+                    saySomething(entity.getBoundingPoly().toString());
+                }
+            }
+        } else {
+            message = "Nothing Found";
+        }
+        return message;
+    }
 }
 
 

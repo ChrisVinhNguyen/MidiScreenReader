@@ -2,8 +2,9 @@ package com.app.androidkt.googlevisionapi;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,8 +29,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CameraListenerActivity.class);
         startActivity(intent);
     }
+
     public void openTakePictureAutoActivity(View view) {
         Intent intent = new Intent(this, TakePictureAuto.class);
+        startActivity(intent);
+    }
+
+    public void openSettingsActivity(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 }

@@ -2,30 +2,11 @@ package com.app.androidkt.googlevisionapi;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
-
-import android.support.v4.content.res.TypedArrayUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
-import org.opencv.imgproc.Imgproc;
-
-import android.app.Activity;
-import android.os.Bundle;
-
-import android.support.v4.view.GestureDetectorCompat;
-
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -57,16 +38,24 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.preference.PreferenceManager;
 
 import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.getInteger;
+import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
 
 public class CameraListenerActivity extends Activity implements CvCameraViewListener2, OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -81,8 +70,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     TextToSpeech tts;
 
     // variables to control the quality and rate of the image passed to the api;
-    int width = 1920;
-    int height = 1080;
+    int width = 640;
+    int height = 480;
     int quality = 50;
     int sleep_time = 2000;
     double sigmaKernBefore = .9;
@@ -162,7 +151,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         tts.setLanguage(Locale.US);
 
         // set up camera view
-        mOpenCvCameraView = (CustomCameraView) findViewById(R.id.java_surface_view);
+        mOpenCvCameraView = findViewById(R.id.java_surface_view);
 
         // set resolution for camera view
         mOpenCvCameraView.setMinimumHeight(height);
@@ -244,8 +233,32 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     // perform image pre-processing on bitmap
     private void processBitmap(Mat bitmapMatrix)
     {
-        int kernSize = (int) (2 * Math.ceil(2 * sigmaKernBefore) + 1);
-        Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaKernBefore);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean processImage = sharedPreferences.getBoolean("ImageProcessEnable", true);
+        Log.i("Preferences", "processImage" + processImage);
+        if (!processImage)
+            return;
+
+
+        String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "");
+        String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "");
+
+        double sigmaBefore = parseDouble(sigmaBeforeString);
+        double sigmaAfter = parseDouble(sigmaAfterString);
+
+        Log.i("Preferences", "sigmaBefore" + sigmaBefore);
+        Log.i("Preferences", "sigmaAfter" + sigmaAfter);
+
+        int kernSize = (int) (2 * Math.ceil(2 * sigmaBefore) + 1);
+        Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaBefore);
+
+        boolean convertToBW = sharedPreferences.getBoolean("ConvertToBW", true);
+        Log.i("Preferences", "ConvertToBW" + convertToBW);
+
+        if (!convertToBW)
+            return;
 
         int rows=bitmapMatrix.rows();
         int cols=bitmapMatrix.cols();
@@ -275,7 +288,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         int difftomid=(abs(firstPeak-secondPeak)/2);
         int cutoff=(Math.min(firstPeak,secondPeak)+difftomid+difftomid/12);
-
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++) {
                 double[] value=bitmapMatrix.get(i,j);
@@ -288,8 +300,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 bitmapMatrix.put(i,j,value);
             }
         }
-        kernSize = (int) (2 * Math.ceil(2 * sigmaKernAfter) + 1);
-        Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaKernAfter);
+        kernSize = (int) (2 * Math.ceil(2 * sigmaAfter) + 1);
+        Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaAfter);
 
 
 

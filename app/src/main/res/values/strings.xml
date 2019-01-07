@@ -4,4 +4,7 @@
     <string name="activity_text_to_speech">Text to Speech</string>
     <string name="speech_button">Press to listen</string>
     <string name="take_picture">Take picture</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

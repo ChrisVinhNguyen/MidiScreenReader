@@ -1,16 +1,16 @@
 package com.app.androidkt.googlevisionapi;
 
-import java.io.FileOutputStream;
-import java.util.List;
-
-import org.opencv.android.JavaCameraView;
-
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.Size;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.hardware.Camera.Size;
+
+import org.opencv.android.JavaCameraView;
+
+import java.io.FileOutputStream;
+import java.util.List;
 
 public class CustomCameraView extends JavaCameraView implements PictureCallback  {
 
@@ -54,8 +54,8 @@ public class CustomCameraView extends JavaCameraView implements PictureCallback 
 
     public void setResolution(Size resolution) {
         disconnectCamera();
-        mMaxHeight = (int)resolution.height;
-        mMaxWidth = (int)resolution.width;
+        mMaxHeight = resolution.height;
+        mMaxWidth = resolution.width;
         connectCamera(getWidth(), getHeight());
     }
 

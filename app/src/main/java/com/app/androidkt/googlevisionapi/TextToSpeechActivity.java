@@ -3,12 +3,13 @@ package com.app.androidkt.googlevisionapi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Locale;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class TextToSpeechActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
     TextToSpeech mTTS = null;

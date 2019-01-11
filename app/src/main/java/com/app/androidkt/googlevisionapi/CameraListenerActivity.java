@@ -426,15 +426,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         tts.speak(msg,TextToSpeech.QUEUE_ADD,null,null);
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (this.mDetector.onTouchEvent(event)) {
-            Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
-    }
-
     public int findPeaks(double[] data, int[] peaks, int width) {
         int peakCount = 0;
         int maxp = 0;
@@ -469,17 +460,27 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return peakCount;
     } // findPeaks()
 
+    // reads any touch events
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // checks if the touch event matches any of the motion events events below
+        if (this.mDetector.onTouchEvent(event)) {
+            Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
+    // functions required for the onTouch event
+    // all of them must be defined, but they do not all need to be used
     @Override
     public boolean onDown(MotionEvent event) {
-        Toast.makeText(this,"onDown: " + event.toString(), Toast.LENGTH_SHORT).show();
-        convertResponseStringFromGesture(responseFromApi, "description");
         return true;
     }
 
     @Override
     public boolean onFling(MotionEvent event1, MotionEvent event2,
                            float velocityX, float velocityY) {
-        Toast.makeText(this,"onFling: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -502,29 +503,29 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     @Override
     public boolean onSingleTapUp(MotionEvent event) {
-//        Toast.makeText(this,"onSingleTapUp: " + event.toString(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
     @Override
     public boolean onDoubleTap(MotionEvent event) {
-        Toast.makeText(this,"onDoubleTap: " + event.toString(), Toast.LENGTH_SHORT).show();
+        // output the bounding vertices captured by the Google Vision API
         convertResponseStringFromGesture(responseFromApi, "bounding");
         return true;
     }
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) {
-        Toast.makeText(this,"onDoubleTapEvent: " + event.toString(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
-//        Toast.makeText(this,"onSingleTapConfirmed: " + event.toString(), Toast.LENGTH_SHORT).show();
+        // output the description captured by the Google Vision API
+        convertResponseStringFromGesture(responseFromApi, "description");
         return true;
     }
 
+    // takes in an option based on the specific touch events and outputs a response accordingly
     private String convertResponseStringFromGesture(BatchAnnotateImagesResponse response, String option) {
 
         AnnotateImageResponse imageResponses = response.getResponses().get(0);

@@ -216,14 +216,14 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         // sleep for 5 seconds, to wait a bit for the api response before sending the next frame in order to avoid sending too many frames
         // TODO: may need to update to wait for api response instead of waiting for 5 seconds every time, responses and new frames may become out of sync
-        try
-        {
-            Thread.sleep(sleep_time);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
+//        try
+//        {
+//            //Thread.sleep(sleep_time);
+//        }
+//        catch(InterruptedException ex)
+//        {
+//            //Thread.currentThread().interrupt();
+//        }
 
         // convert bitmap back to matrix to return
         Utils.bitmapToMat(frameBitmap, frameMat);
@@ -323,9 +323,9 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         annotateImageRequests.add(annotateImageReq);
 
         // call api in background, get a formatted response containing the text and text bounding boxes
-        new AsyncTask<Object, Void, String>() {
-            @Override
-            protected String doInBackground(Object... params) {
+//        new AsyncTask<Object, Void, String>() {
+//            @Override
+//            protected String doInBackground(Object... params) {
                 try {
 
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
@@ -345,26 +345,28 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                     annotateRequest.setDisableGZipContent(true);
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
                     responseFromApi = response;
-                    return convertResponseToString(response);
+                    convertResponseToString(response);
+                    //return convertResponseToString(response);
                 } catch (GoogleJsonResponseException e) {
                     Log.d(TAG, "failed to make API request because " + e.getContent());
                 } catch (IOException e) {
                     Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
                 }
-                return "Cloud Vision API request failed. Check logs for details.";
+                //return "Cloud Vision API request failed. Check logs for details.";
             }
-            // upon api response, display formatted response
-            protected void onPostExecute(String result) {
+//            // upon api response, display formatted response
+//            protected void onPostExecute(String result) {
+//
+//                Context context = getApplicationContext();
+//                int duration = Toast.LENGTH_SHORT;
+//                done = true;
+//
+////                Toast toast = Toast.makeText(context, result, duration);
+////                toast.show();
+//            }
+//        }.execute();
 
-                Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-
-//                Toast toast = Toast.makeText(context, result, duration);
-//                toast.show();
-            }
-        }.execute();
-
-    }
+    //}
 
     //converts bitmap to JPEG for input into cloud vision
     @NonNull
@@ -465,7 +467,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     public boolean onTouch(View v, MotionEvent event) {
         // checks if the touch event matches any of the motion events events below
         if (this.mDetector.onTouchEvent(event)) {
-            Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
@@ -486,19 +488,19 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     @Override
     public void onLongPress(MotionEvent event) {
-        Toast.makeText(this,"onLongPress: " + event.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"onLongPress: " + event.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX,
                             float distanceY) {
-        Toast.makeText(this,"onScroll: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"onScroll: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
     @Override
     public void onShowPress(MotionEvent event) {
-        Toast.makeText(this,"onShowPress: " + event.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"onShowPress: " + event.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -522,6 +524,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     public boolean onSingleTapConfirmed(MotionEvent event) {
         // output the description captured by the Google Vision API
         convertResponseStringFromGesture(responseFromApi, "description");
+
         return true;
     }
 
@@ -539,6 +542,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 message = formatBoundingBoxAnnotation(entityAnnotations, option);
                 break;
         }
+        Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
         return message;
     }
 

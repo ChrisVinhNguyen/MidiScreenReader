@@ -66,6 +66,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     private static final String DEBUG_TAG = "Gestures";
     private GestureDetectorCompat mDetector;
+    private ScreenIdentification screenIdentifier;
+    private ScreenData currentScreenData;
 
     TextToSpeech tts;
 
@@ -214,18 +216,9 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         // calls the cloudvision api on the processed bitmap
         callCloudVision(frameBitmap,feature);
 
-        // sleep for 5 seconds, to wait a bit for the api response before sending the next frame in order to avoid sending too many frames
-        // TODO: may need to update to wait for api response instead of waiting for 5 seconds every time, responses and new frames may become out of sync
-//        try
-//        {
-//            //Thread.sleep(sleep_time);
-//        }
-//        catch(InterruptedException ex)
-//        {
-//            //Thread.currentThread().interrupt();
-//        }
+        Log.d("gestureTag", "IN SINGLE TAP");
+        currentScreenData = new ScreenData(responseFromApi);
 
-        // convert bitmap back to matrix to return
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
@@ -322,10 +315,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         annotateImageReq.setImage(getImageEncodeImage(bitmap));
         annotateImageRequests.add(annotateImageReq);
 
-        // call api in background, get a formatted response containing the text and text bounding boxes
-//        new AsyncTask<Object, Void, String>() {
-//            @Override
-//            protected String doInBackground(Object... params) {
+        // call api, get a formatted response containing the text and text bounding boxes
+
                 try {
 
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
@@ -354,19 +345,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 }
                 //return "Cloud Vision API request failed. Check logs for details.";
             }
-//            // upon api response, display formatted response
-//            protected void onPostExecute(String result) {
-//
-//                Context context = getApplicationContext();
-//                int duration = Toast.LENGTH_SHORT;
-//                done = true;
-//
-////                Toast toast = Toast.makeText(context, result, duration);
-////                toast.show();
-//            }
-//        }.execute();
-
-    //}
 
     //converts bitmap to JPEG for input into cloud vision
     @NonNull
@@ -523,7 +501,9 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
         // output the description captured by the Google Vision API
+
         convertResponseStringFromGesture(responseFromApi, "description");
+
 
         return true;
     }
@@ -542,7 +522,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 message = formatBoundingBoxAnnotation(entityAnnotations, option);
                 break;
         }
-        Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
         return message;
     }
 
@@ -556,9 +536,9 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 message += "\n";
 
                 if (option == "description") {
-                    saySomething(entity.getDescription());
+                    //saySomething(entity.getDescription());
                 } else if (option == "bounding") {
-                    saySomething(entity.getBoundingPoly().toString());
+                    //saySomething(entity.getBoundingPoly().toString());
                 }
             }
         } else {

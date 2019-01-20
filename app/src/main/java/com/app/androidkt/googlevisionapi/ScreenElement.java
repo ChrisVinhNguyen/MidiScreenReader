@@ -11,6 +11,7 @@ public class ScreenElement {
     private String text;
     private List<Vertex> vertices;
 
+    // constructor
     public ScreenElement(String textData, List<Vertex> verticesData)
     {
         text = textData;
@@ -18,6 +19,9 @@ public class ScreenElement {
 
         //this.printScreenElement();
     }
+
+    public String getText(){ return text; }
+    public List<Vertex> getVertices(){ return vertices; }
 
     public void printScreenElement()
     {

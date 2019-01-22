@@ -1,0 +1,103 @@
+{
+  "master":
+  [
+    {
+      "textImportant": true,
+      "description": "Master",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 9,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    },
+    {
+      "textImportant": true,
+      "description": "Category",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 41,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    },
+    {
+      "textImportant": true,
+      "description": "USR",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 41,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    },
+  ],
+  "recording":
+  [
+    {
+      "description": "modified",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 41,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    }
+  ]
+}

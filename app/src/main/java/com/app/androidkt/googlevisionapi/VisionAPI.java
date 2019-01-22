@@ -293,7 +293,6 @@ public class VisionAPI extends AppCompatActivity implements AdapterView.OnItemSe
                 imageUploadProgress.setVisibility(View.INVISIBLE);
             }
         }.execute();
-//        bitmap.recycle();
     }
 
     @NonNull

@@ -256,8 +256,6 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         if (!processImage)
             return;
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
 
         String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "");
         String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "");

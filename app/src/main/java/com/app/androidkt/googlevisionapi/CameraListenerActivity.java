@@ -257,8 +257,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             return;
 
 
-        String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "");
-        String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "");
+        String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "0.7");
+        String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "0.3");
 
         double sigmaBefore = parseDouble(sigmaBeforeString);
         double sigmaAfter = parseDouble(sigmaAfterString);

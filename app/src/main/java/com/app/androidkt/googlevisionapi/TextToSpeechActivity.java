@@ -55,6 +55,7 @@ public class TextToSpeechActivity extends AppCompatActivity implements TextToSpe
                         result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Toast.makeText(this, "TTS language is not supported", Toast.LENGTH_LONG).show();
                 } else {
+                    mTTS.setSpeechRate(1);
                     saySomething("TTS is ready");
                 }
             }

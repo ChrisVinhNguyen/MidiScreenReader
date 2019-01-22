@@ -37,7 +37,12 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
@@ -54,9 +59,13 @@ import androidx.preference.PreferenceManager;
 
 import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
 import static java.lang.Double.parseDouble;
+import static java.lang.Float.parseFloat;
 import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
+import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
+import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
+import static org.opencv.imgproc.Imgproc.rectangle;
 
 public class CameraListenerActivity extends Activity implements CvCameraViewListener2, OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     private static final String TAG = "OCVSample::CameraListenerActivity";
@@ -150,6 +159,12 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         });
         tts.setLanguage(Locale.US);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String speechRateString = sharedPreferences.getString("SpeechRateValue", "1");
+
+        float speechRate=parseFloat(speechRateString);
+        tts.setSpeechRate(speechRate);
         // set up camera view
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
 
@@ -241,6 +256,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         if (!processImage)
             return;
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "");
         String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "");
@@ -256,38 +273,36 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         boolean convertToBW = sharedPreferences.getBoolean("ConvertToBW", true);
         Log.i("Preferences", "ConvertToBW" + convertToBW);
-
         if (!convertToBW)
             return;
 
         int rows=bitmapMatrix.rows();
         int cols=bitmapMatrix.cols();
-        double []grayScaleColour=new double[256];
+        double []grayScaleHistogram=new double[256];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++) {
                 double[] value=bitmapMatrix.get(i,j);
-                int test =(int)value[0];
-                if(test>=100)
-                    grayScaleColour[test]++;
+                int pixelColourIntensity =(int)value[0];
+                if(pixelColourIntensity>=100)
+                    grayScaleHistogram[pixelColourIntensity]++;
             }
         }
-        for(int i=0;i<255;i++){
-            Log.i(TAG, "processBitmap:"+i+",val="+grayScaleColour[i]);
-        }
+
         int []peaks=new int[255];
-        findPeaks(grayScaleColour,peaks,20);
+        findPeaks(grayScaleHistogram,peaks,50);
         Arrays.sort(peaks);
         int firstPeak=0;
         int secondPeak=0;
-
         if(peaks.length-1 >=0)
             firstPeak=peaks[peaks.length-1];
-        if(peaks.length-2 >=0)
-            secondPeak=peaks[peaks.length-2];
-
+        if(peaks.length-2 >=0) {
+            secondPeak = peaks[peaks.length - 2];
+        }
 
         int difftomid=(abs(firstPeak-secondPeak)/2);
         int cutoff=(Math.min(firstPeak,secondPeak)+difftomid+difftomid/12);
+
+        //manually set the values to 1/0 depending on the cutoff value
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++) {
                 double[] value=bitmapMatrix.get(i,j);
@@ -300,11 +315,32 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 bitmapMatrix.put(i,j,value);
             }
         }
+        Mat edges= new Mat();
+        List<MatOfPoint> contours=new ArrayList<>();
+        Imgproc.Canny(bitmapMatrix,edges,100,200);
+        Imgproc.findContours(edges,contours, new Mat(),RETR_EXTERNAL,CHAIN_APPROX_SIMPLE);
+
+        //finding the largest contour area in this case it should be the screen
+        double maxArea = -1;
+        int maxAreaIdx = -1;
+        for (int idx = 0; idx < contours.size(); idx++) {
+            Mat contour = contours.get(idx);
+            double contourarea = Imgproc.contourArea(contour);
+            if (contourarea > maxArea) {
+                maxArea = contourarea;
+                maxAreaIdx = idx;
+            }
+        }
+
+
         kernSize = (int) (2 * Math.ceil(2 * sigmaAfter) + 1);
         Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaAfter);
 
-
-
+        //find the boundingbox of the screen and draw it on the picture
+        if(!contours.isEmpty()) {
+            Rect boundingBox = Imgproc.boundingRect(contours.get(maxAreaIdx));
+            rectangle(bitmapMatrix, new Point(boundingBox.x, boundingBox.y), new Point(boundingBox.x + boundingBox.width, boundingBox.y + boundingBox.height), new Scalar(100), 4);
+        }
     }
 
     // calls the cloud vision api to perform ocr on the image
@@ -465,7 +501,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     public boolean onTouch(View v, MotionEvent event) {
         // checks if the touch event matches any of the motion events events below
         if (this.mDetector.onTouchEvent(event)) {
-            Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
@@ -486,19 +522,19 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     @Override
     public void onLongPress(MotionEvent event) {
-        Toast.makeText(this,"onLongPress: " + event.toString(), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this,"onLongPress: " + event.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX,
                             float distanceY) {
-        Toast.makeText(this,"onScroll: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
+       /// Toast.makeText(this,"onScroll: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
     @Override
     public void onShowPress(MotionEvent event) {
-        Toast.makeText(this,"onShowPress: " + event.toString(), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this,"onShowPress: " + event.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -539,6 +575,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 message = formatBoundingBoxAnnotation(entityAnnotations, option);
                 break;
         }
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
         return message;
     }
 

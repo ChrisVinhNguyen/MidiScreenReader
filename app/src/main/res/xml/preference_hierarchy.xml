@@ -23,4 +23,13 @@
             app:entries="@array/Numbers"
             app:entryValues="@array/NumbersValue" />
     </PreferenceCategory>
+    <PreferenceCategory
+        app:key="Text to Speech"
+        app:title="Text to Speech Settings">
+        <ListPreference
+            app:key="SpeechRateValue"
+            app:title="Set Speech Rate"
+            app:entries="@array/Numbers"
+            app:entryValues="@array/NumbersValue" />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

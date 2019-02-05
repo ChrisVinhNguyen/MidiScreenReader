@@ -225,21 +225,25 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         // initialize a bitmap, convert the frame matrix into a bitmap, the perform pre-processing on the bitmap
         Bitmap frameBitmap = Bitmap.createBitmap(frameMat.cols(), frameMat.rows(), Bitmap.Config.ARGB_8888);
-        processBitmap(frameMat);
+        Rect screenBoundingBox= processBitmap(frameMat);
         Utils.matToBitmap(frameMat, frameBitmap);
 
         // calls the cloudvision api on the processed bitmap
-        callCloudVision(frameBitmap,feature);
+        callCloudVision(frameBitmap,feature,screenBoundingBox);
 
         Log.d("gestureTag", "IN SINGLE TAP");
-        currentScreenData = new ScreenData(responseFromApi);
+
+        if(screenBoundingBox==null)
+            currentScreenData = new ScreenData(responseFromApi);
+        else
+            currentScreenData = new ScreenData(responseFromApi,screenBoundingBox);
 
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
 
     // perform image pre-processing on bitmap
-    private void processBitmap(Mat bitmapMatrix)
+    private Rect processBitmap(Mat bitmapMatrix)
     {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -247,7 +251,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         boolean processImage = sharedPreferences.getBoolean("ImageProcessEnable", true);
         Log.i("Preferences", "processImage" + processImage);
         if (!processImage)
-            return;
+            return null;
 
 
         String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "0.7");
@@ -266,7 +270,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         Log.i("Preferences", "ConvertToBW" + convertToBW);
 
         if (!convertToBW)
-            return;
+            return null;
 
         int rows=bitmapMatrix.rows();
         int cols=bitmapMatrix.cols();
@@ -331,13 +335,15 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         //find the boundingbox of the screen and draw it on the picture
         if(!contours.isEmpty()) {
-            Rect boundingBox = Imgproc.boundingRect(contours.get(maxAreaIdx));
-            rectangle(bitmapMatrix, new Point(boundingBox.x, boundingBox.y), new Point(boundingBox.x + boundingBox.width, boundingBox.y + boundingBox.height), new Scalar(100), 4);
+            Rect screenBoundingBox=(Imgproc.boundingRect(contours.get(maxAreaIdx)));
+            rectangle(bitmapMatrix, new Point(screenBoundingBox.x, screenBoundingBox.y), new Point(screenBoundingBox.x + screenBoundingBox.width, screenBoundingBox.y + screenBoundingBox.height), new Scalar(100), 4);
+            return screenBoundingBox;
         }
+        return null;
     }
 
     // calls the cloud vision api to perform ocr on the image
-    public void callCloudVision(final Bitmap bitmap, final Feature feature) {
+    public void callCloudVision(final Bitmap bitmap, final Feature feature, Rect boundingBox) {
 
         // get feature list (currently just text detection)
         final List<Feature> featureList = new ArrayList<>();
@@ -346,9 +352,18 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         final List<AnnotateImageRequest> annotateImageRequests = new ArrayList<>();
 
         // setup and encode bitmap
+
         AnnotateImageRequest annotateImageReq = new AnnotateImageRequest();
         annotateImageReq.setFeatures(featureList);
-        annotateImageReq.setImage(getImageEncodeImage(bitmap));
+
+        if(boundingBox!=null) {
+            Bitmap resizedBitmap=Bitmap.createBitmap(bitmap, boundingBox.x,boundingBox.y,boundingBox.width,boundingBox.height);
+            annotateImageReq.setImage(getImageEncodeImage(resizedBitmap));
+        }else{
+            annotateImageReq.setImage(getImageEncodeImage(bitmap));
+
+        }
+
         annotateImageRequests.add(annotateImageReq);
 
         // call api, get a formatted response containing the text and text bounding boxes

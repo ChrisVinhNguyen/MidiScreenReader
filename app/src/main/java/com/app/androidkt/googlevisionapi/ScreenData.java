@@ -9,14 +9,28 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Vertex;
 
+import org.opencv.core.Rect;
+
 import java.util.List;
 import java.util.Vector;
 
 public class ScreenData {
 
     private List<ScreenElement> elementList;
+    private Rect screenBoundingBox;
 
     public ScreenData( BatchAnnotateImagesResponse response)
+    {
+        initialize(response);
+    }
+
+    public ScreenData(BatchAnnotateImagesResponse response, Rect boundBox)
+    {
+        initialize(response);
+        screenBoundingBox=boundBox;
+    }
+
+    private void initialize( BatchAnnotateImagesResponse response)
     {
         elementList = new Vector<>();
 
@@ -36,7 +50,6 @@ public class ScreenData {
             }
         }
     }
-
     public boolean compareScreen(ScreenData inputScreen)
     {
         boolean sameScreen = false;

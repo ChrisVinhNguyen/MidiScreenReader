@@ -14,6 +14,7 @@ import org.opencv.core.Rect;
 import java.util.List;
 import java.util.Vector;
 
+// class that represents the data of a specific screen
 public class ScreenData {
 
     private List<ScreenElement> elementList;
@@ -55,7 +56,7 @@ public class ScreenData {
         boolean sameScreen = false;
         int numElements = this.elementList.size();
         int correctElements = 0;
-        float vertexTreshold = 50;
+        //float vertexTreshold = 50;
 
         for(ScreenElement element : this.elementList)
         {
@@ -64,7 +65,22 @@ public class ScreenData {
 
             for(ScreenElement inputElement : inputScreen.elementList)
             {
-                //if()
+                boolean text_verified = false;
+                if(element.getText() != "Non-important Text"){
+                    int distance = levenshteinDistance(inputElement.getText(), element.getText());
+                    if(distance < textThreshold)
+                    {
+                        text_verified = true;
+                    }
+                }
+                else{
+                    text_verified = true;
+                }
+
+                if(text_verified)
+                {
+                    correctElements++;
+                }
             }
         }
 

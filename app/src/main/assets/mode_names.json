@@ -1,0 +1,56 @@
+{
+  "Voice": {
+    "Mode-type": "normal",
+    "Description":"This synthesizer has a wealth of high quality, dynamic sounds—also referred to as 'Voices.'' You can play these Voices—one Voice at a time—from the keyboard in the Voice mode. This mode also lets you create your own original Voices.",
+  },
+  "Perform": {
+    "Mode-type": "normal",
+    "Description": "This mode lets you play and create Performances. A Performance lets you put several different Voices together in layers or play different two Voices in a keyboard split."
+  },
+  "Master": {
+    "Mode-type": "normal",
+    "Description":" This mode lets you register settings that you often use in the Voice, Performance, Song or Pattern mode, and instantly recall the relevant mode and custom settings together in a single button press—without having to first select a mode. In addition, this mode lets you divide the keyboard into four separate sections—just as if you were playing four different MIDI keyboards.",
+  },
+  "Song": {
+    "Mode-type": "normal",
+    "Description":"This mode lets you record, edit and play your own original Songs.",
+    "Sub_mode_file_path": "song_sub_modes.json"
+  },
+  "Pattern": {
+    "Mode-type": "normal",
+    "Description":"This mode lets you play, record, edit and play your own original rhythm patterns, which can be used to make up a Song."
+  },
+  "Mixing": {
+    "Mode-type": "normal",
+    "Description":"This mode lets you set up detailed parameters of the multi-timbral tone generator for use with Song/ Pattern playback."
+  },
+  "File": {
+    "Mode-type": "normal",
+    "Description":"This mode lets you save data you’ve created on this instrument to a USB flash memory device, and allows you to load data from the USB flash memory device to the MOXF6/MOXF8.",
+    "Actions_file_path": "song_mode_actions.json"
+  },
+  "Utility": {
+    "Mode-type": "normal",
+    "Description":" This mode lets you set parameters that apply to the entire system of this instrument."
+  },
+  "Quick Setup": {
+    "Mode-type": "normal",
+    "Description":"This mode lets you register up to six settings for MIDI connection and Audio connection between this instrument and the computer as 'Quick Setups', and instantly recall the custom settings with a single button press."
+  },
+  "DAW Remote": {
+    "Mode-type": "normal",
+    "Description":"This mode lets you control DAW software on your computer from the panel controls of the instrument",
+  },
+  "Edit": {
+    "Mode-type": "global",
+    "Description":"This mode lets you edit various parameters in each of the Voice, Performance, Song, Pattern and Master modes.",
+  },
+  "Job": {
+    "Mode-type": "global",
+    "Description":"This mode lets you execute various commands such as Initialize, Copy, and MIDI data conversion—useful for creating your original programs",
+  },
+  "Store": {
+    "Mode-type": "global",
+    "Description":"This mode lets you store the edited program to internal memory",
+  },
+}

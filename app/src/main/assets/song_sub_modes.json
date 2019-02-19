@@ -1,0 +1,46 @@
+{
+  "Main": {
+    "Functions": {
+      "Play": {
+        "Transition": {
+          "Description": "Press F1"
+        },
+        "Actions": {
+          "Set_time_signature": {
+            "Description": "<# insert description here>"
+          }
+        }
+      },
+      "Groove": {
+      },
+      "Track": {
+      }
+    },
+  },
+  "Rec": {
+    "Functions":{
+      "Setup":{
+        "Transition": {
+          "Description": "Press F1"
+        },
+        "Actions": {
+          "Set_type": {
+            "Description": "<# insert description here>"
+          },
+          "Set_event": {
+            "Description": "<# insert description here>"
+          },
+          "Set_RecTr": {
+            "Description": "<# insert description here>"
+          },
+          "Set_ch": {
+            "Description": "<# insert description here>"
+          }
+        }
+      },
+      "Voice":{
+        "Transition":""
+      },
+    }
+  }
+}

@@ -1,5 +1,6 @@
 {
   "Main": {
+    "Transition": "none",
     "Functions": {
       "Play": {
         "Transition": {
@@ -18,6 +19,7 @@
     },
   },
   "Rec": {
+    "Transition": "Press Rec",
     "Functions":{
       "Setup":{
         "Transition": {
@@ -39,8 +41,13 @@
         }
       },
       "Voice":{
-        "Transition":""
+        "Transition": {
+          "Description": "Press F2"
+        }
       },
     }
+  },
+  "Step Record": {
+    "Transition": "Press Play",
   }
 }

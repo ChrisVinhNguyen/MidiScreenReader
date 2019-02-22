@@ -56,7 +56,7 @@ public class ScreenIdentification {
                 screenText.add(text);
                 screenVertices.add(vertices);
             }
-            ScreenData newScreen = new ScreenData(screenText, screenVertices);
+            ScreenData newScreen = new ScreenData(screenText, screenVertices, key);
             screenSearchSet.add(newScreen);
         }
     }

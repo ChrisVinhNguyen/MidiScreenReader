@@ -19,6 +19,7 @@ public class ScreenData {
 
     private List<ScreenElement> elementList;
     private Rect screenBoundingBox;
+    private String screenName;
 
     public ScreenData( BatchAnnotateImagesResponse response)
     {
@@ -30,7 +31,7 @@ public class ScreenData {
         initialize(response);
         screenBoundingBox=boundBox;
     }
-    public ScreenData(List<String> text, List<List<Vertex>> vertices)
+    public ScreenData(List<String> text, List<List<Vertex>> vertices, String name)
     {
         elementList = new Vector<>();
         for(int i = 0; i < text.size(); i++)
@@ -38,6 +39,7 @@ public class ScreenData {
             ScreenElement element = new ScreenElement(text.get(i), vertices.get(i));
             elementList.add(element);
         }
+        screenName = name;
 
     }
 

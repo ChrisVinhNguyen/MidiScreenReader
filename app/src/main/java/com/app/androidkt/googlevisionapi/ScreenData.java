@@ -30,6 +30,16 @@ public class ScreenData {
         initialize(response);
         screenBoundingBox=boundBox;
     }
+    public ScreenData(List<String> text, List<List<Vertex>> vertices)
+    {
+        elementList = new Vector<>();
+        for(int i = 0; i < text.size(); i++)
+        {
+            ScreenElement element = new ScreenElement(text.get(i), vertices.get(i));
+            elementList.add(element);
+        }
+
+    }
 
     private void initialize( BatchAnnotateImagesResponse response)
     {

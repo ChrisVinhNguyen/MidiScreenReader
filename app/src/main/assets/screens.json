@@ -1,8 +1,8 @@
 {
+
   "master":
   [
     {
-      "textImportant": true,
       "description": "Master",
       "boundingPoly": {
         "vertices": [
@@ -26,7 +26,6 @@
       }
     },
     {
-      "textImportant": true,
       "description": "Category",
       "boundingPoly": {
         "vertices": [
@@ -50,7 +49,6 @@
       }
     },
     {
-      "textImportant": true,
       "description": "USR",
       "boundingPoly": {
         "vertices": [
@@ -72,9 +70,35 @@
           }
         ]
       }
-    },
+    }
   ],
   "recording":
+  [
+    {
+      "description": "modified",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 41,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    }
+  ],
+  "recording2":
   [
     {
       "description": "modified",

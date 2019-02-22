@@ -167,6 +167,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         float speechRate=parseFloat(speechRateString);
         tts.setSpeechRate(speechRate);
+
+        screenIdentifier = new ScreenIdentification();
         // set up camera view
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
 

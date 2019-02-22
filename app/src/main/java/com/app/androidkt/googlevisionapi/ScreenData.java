@@ -21,6 +21,8 @@ public class ScreenData {
     private Rect screenBoundingBox;
     private String screenName;
 
+    public String getName() { return screenName; }
+
     public ScreenData( BatchAnnotateImagesResponse response)
     {
         initialize(response);

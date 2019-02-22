@@ -23,10 +23,13 @@ import com.google.gson.JsonObject;
 public class ScreenIdentification {
     //will need to replace list with state machine here
     private List<ScreenData> screenSearchSet;
-    public String currentScreen;
+    private String currentScreen;
+
+    public String getCurrentScreen() { return currentScreen; }
 
     public ScreenIdentification()
     {
+        currentScreen = "initializing";
         try {
             loadScreenSearchSet();
         }
@@ -36,7 +39,23 @@ public class ScreenIdentification {
         }
     }
 
+    public void identifyScreen(ScreenData inputScreen)
+    {
+        Log.d("IdentificationTag", "in identify screen");
+        for(ScreenData searchScreen: screenSearchSet)
+        {
+            if(searchScreen.compareScreen(inputScreen)){
+                if(currentScreen != searchScreen.getName())
+                {
+                    currentScreen = searchScreen.getName();
+                    Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
+                }
+            }
+        }
+    }
+
     private void loadScreenSearchSet() throws JSONException {
+        screenSearchSet = new Vector<>();
         JSONObject screensJson = new JSONObject(loadJSONFromAsset(AppContext.getAppContext()));
         JSONArray keys = screensJson.names();
 
@@ -59,6 +78,7 @@ public class ScreenIdentification {
             ScreenData newScreen = new ScreenData(screenText, screenVertices, key);
             screenSearchSet.add(newScreen);
         }
+        Log.d("IdentificationTag", "done loading screen");
     }
 
     private List<Vertex> getVertices(JSONArray verticesJson) throws JSONException{

@@ -240,6 +240,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         else
             currentScreenData = new ScreenData(responseFromApi,screenBoundingBox);
 
+        screenIdentifier.identifyScreen(currentScreenData);
+
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
@@ -553,9 +555,10 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
-        // output the description captured by the Google Vision API
+        // output the current screen of keyboard
 
-        convertResponseStringFromGesture(responseFromApi, "description");
+        //convertResponseStringFromGesture(responseFromApi, "description");
+        Toast.makeText(this, screenIdentifier.getCurrentScreen() , Toast.LENGTH_SHORT).show();
 
 
         return true;

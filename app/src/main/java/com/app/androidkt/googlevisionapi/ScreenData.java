@@ -75,17 +75,23 @@ public class ScreenData {
         for(ScreenElement element : this.elementList)
         {
             // min number for viable levenshtein distance
-            int textThreshold = element.getText().length()/2;
+            float textThreshold = (float) (((float) element.getText().length())/2.0);
 
             for(ScreenElement inputElement : inputScreen.elementList)
             {
                 boolean text_verified = false;
-                if(element.getText() != "Non-important Text"){
+                if(!element.getText().equals("NULL")){
                     int distance = levenshteinDistance(inputElement.getText(), element.getText());
+
                     if(distance < textThreshold)
                     {
+                        Log.d("ScreenElementTag", "FOUND!!!!!!!!!!!!" );
                         text_verified = true;
                     }
+                    Log.d("ScreenElementTag", inputElement.getText() + " , " + element.getText());
+                    Log.d("ScreenElementTag", Integer.toString(distance) + " , " + Float.toString(textThreshold) );
+
+                    Log.d("ScreenElementTag", "______________" );
                 }
                 else{
                     text_verified = true;
@@ -94,17 +100,25 @@ public class ScreenData {
                 if(text_verified)
                 {
                     correctElements++;
+                    break;
                 }
             }
         }
 
+        Log.d("ScreenElementTag", Integer.toString(correctElements) );
+        Log.d("ScreenElementTag", "++++++++++++++++++++++++++++++++++++" );
         if (correctElements == numElements)
         {
             sameScreen = true;
         }
         return  sameScreen;
     }
-
+    public void printScreenData(){
+        for (ScreenElement element: elementList)
+        {
+            element.printScreenElement();
+        }
+    }
     // computes the minimum number of single-character edits required to change one word into the other. Strings do not have to be the same length
     public static int levenshteinDistance(String a, String b) {
         a = a.toLowerCase();

@@ -235,10 +235,14 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         Log.d("gestureTag", "IN SINGLE TAP");
 
-        if(screenBoundingBox==null)
+        if(screenBoundingBox==null) {
+            Log.d("TempTag1", "initializing without bounding box");
             currentScreenData = new ScreenData(responseFromApi);
-        else
-            currentScreenData = new ScreenData(responseFromApi,screenBoundingBox);
+        }
+        else {
+            Log.d("TempTag2", "initializing with bounding box");
+            currentScreenData = new ScreenData(responseFromApi, screenBoundingBox);
+        }
 
         screenIdentifier.identifyScreen(currentScreenData);
 

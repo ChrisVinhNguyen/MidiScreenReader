@@ -30,9 +30,11 @@ public class ScreenData {
 
     public ScreenData(BatchAnnotateImagesResponse response, Rect boundBox)
     {
-        initialize(response);
         screenBoundingBox=boundBox;
+        initialize(response);
     }
+
+    // for constructing search set screenData
     public ScreenData(List<String> text, List<List<Vertex>> vertices, String name)
     {
         elementList = new Vector<>();
@@ -59,7 +61,7 @@ public class ScreenData {
                 String text = entity.getDescription();
                 List<Vertex> vertices = entity.getBoundingPoly().getVertices();
 
-                ScreenElement element = new ScreenElement(text, vertices);
+                ScreenElement element = new ScreenElement(text, vertices, screenBoundingBox);
                 elementList.add(element);
 
             }
@@ -85,13 +87,13 @@ public class ScreenData {
 
                     if(distance < textThreshold)
                     {
-                        Log.d("ScreenElementTag", "FOUND!!!!!!!!!!!!" );
+                        Log.d("CompareScreenTag", "FOUND!!!!!!!!!!!!" );
                         text_verified = true;
                     }
-                    Log.d("ScreenElementTag", inputElement.getText() + " , " + element.getText());
-                    Log.d("ScreenElementTag", Integer.toString(distance) + " , " + Float.toString(textThreshold) );
+                    Log.d("CompareScreenTag", inputElement.getText() + " , " + element.getText());
+                    Log.d("CompareScreenTag", Integer.toString(distance) + " , " + Float.toString(textThreshold) );
 
-                    Log.d("ScreenElementTag", "______________" );
+                    Log.d("CompareScreenTag", "______________" );
                 }
                 else{
                     text_verified = true;
@@ -105,8 +107,8 @@ public class ScreenData {
             }
         }
 
-        Log.d("ScreenElementTag", Integer.toString(correctElements) );
-        Log.d("ScreenElementTag", "++++++++++++++++++++++++++++++++++++" );
+        Log.d("CompareScreenTag", Integer.toString(correctElements) );
+        Log.d("CompareScreenTag", "++++++++++++++++++++++++++++++++++++" );
         if (correctElements == numElements)
         {
             sameScreen = true;

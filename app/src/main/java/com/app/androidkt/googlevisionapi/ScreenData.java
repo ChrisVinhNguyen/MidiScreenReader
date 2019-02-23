@@ -60,8 +60,13 @@ public class ScreenData {
             for (EntityAnnotation entity : entityAnnotations) {
                 String text = entity.getDescription();
                 List<Vertex> vertices = entity.getBoundingPoly().getVertices();
+                ScreenElement element;
 
-                ScreenElement element = new ScreenElement(text, vertices, screenBoundingBox);
+                if(screenBoundingBox != null)
+                    element = new ScreenElement(text, vertices, screenBoundingBox);
+                else
+                    element = new ScreenElement(text, vertices);
+
                 elementList.add(element);
 
             }

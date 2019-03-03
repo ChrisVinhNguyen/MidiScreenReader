@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewDebug;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -242,6 +243,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         else {
             Log.d("TempTag2", "initializing with bounding box");
             currentScreenData = new ScreenData(responseFromApi, screenBoundingBox);
+
         }
 
         screenIdentifier.identifyScreen(currentScreenData);
@@ -278,6 +280,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         }
         boolean processImage = sharedPreferences.getBoolean("ImageProcessEnable", true);
         Log.i("Preferences", "processImage" + processImage);
+
         if (!processImage)
             return screenBoundingBox;
 
@@ -365,7 +368,9 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         if(boundingBox!=null) {
             Bitmap resizedBitmap=Bitmap.createBitmap(bitmap, boundingBox.x,boundingBox.y,boundingBox.width,boundingBox.height);
+            Log.i("boundingbox","Height:"+ Integer.toString(resizedBitmap.getHeight())+"width:"+Integer.toString(resizedBitmap.getWidth()));
             annotateImageReq.setImage(getImageEncodeImage(resizedBitmap));
+
         }else{
             annotateImageReq.setImage(getImageEncodeImage(bitmap));
 

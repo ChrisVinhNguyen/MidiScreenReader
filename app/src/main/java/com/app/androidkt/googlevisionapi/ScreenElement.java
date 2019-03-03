@@ -19,26 +19,10 @@ public class ScreenElement {
         text = textData;
         vertices = verticesData;
         for (Vertex v:verticesData){
-            try {
-                int xVal = v.getX();
-                v.setX((xVal * 100) / screenBoundingBox.width);
-            }
-            catch (Exception e)
-            {
-                v.setX(0);
-                Log.e("You fucked up", v.toString());
-            }
-
-            try{
-                int yVal = v.getY();
-                v.setY((yVal * 100) / screenBoundingBox.height);
-            }
-            catch (Exception e)
-            {
-                v.setY(0);
-                Log.e("You fucked up", v.toString());
-            }
-
+            Integer xVal=v.getX();
+            Integer yVal=v.getY();
+            v.setX(xVal==null?0:(xVal*100)/screenBoundingBox.width);
+            v.setY(yVal==null?0:(yVal*100)/screenBoundingBox.height);
         }
         this.printScreenElement();
 

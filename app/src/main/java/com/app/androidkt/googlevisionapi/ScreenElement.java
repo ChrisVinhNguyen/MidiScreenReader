@@ -19,10 +19,26 @@ public class ScreenElement {
         text = textData;
         vertices = verticesData;
         for (Vertex v:verticesData){
-            int xVal=v.getX();
-            int yVal=v.getY();
-            v.setX((xVal*100)/screenBoundingBox.width);
-            v.setY((yVal*100)/screenBoundingBox.height);
+            try {
+                int xVal = v.getX();
+                v.setX((xVal * 100) / screenBoundingBox.width);
+            }
+            catch (Exception e)
+            {
+                v.setX(0);
+                Log.e("You fucked up", v.toString());
+            }
+
+            try{
+                int yVal = v.getY();
+                v.setY((yVal * 100) / screenBoundingBox.height);
+            }
+            catch (Exception e)
+            {
+                v.setY(0);
+                Log.e("You fucked up", v.toString());
+            }
+
         }
         this.printScreenElement();
 
@@ -42,7 +58,7 @@ public class ScreenElement {
 
     public void printScreenElement()
     {
-        Log.d("ScreenElementTag", "text: " + text + "  |  Bounding box: " + vertices );
+        Log.d("PrintScreenTag", "text: " + text + "  |  Bounding box: " + vertices );
     }
 
 }

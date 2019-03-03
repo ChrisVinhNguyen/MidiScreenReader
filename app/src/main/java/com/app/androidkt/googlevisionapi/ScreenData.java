@@ -33,6 +33,7 @@ public class ScreenData {
 
         screenBoundingBox=boundBox;
         initialize(response);
+        this.printScreenData();
     }
 
     // for constructing search set screenData
@@ -86,12 +87,49 @@ public class ScreenData {
             for(ScreenElement inputElement : inputScreen.elementList)
             {
                 boolean text_verified = false;
+                int num_vertices_verified = 0;
+
                 if(!element.getText().equals("NULL")){
                     text_verified = textCompare(inputElement.getText(), element.getText());
                 }
                 else{
                     text_verified = true;
                 }
+
+                List<Vertex> elementVertices = element.getVertices();
+                List<Vertex> inputElementVertices = inputElement.getVertices();
+                for(int i = 0; i < elementVertices.size(); i++)
+                {
+                    int elementX = elementVertices.get(i).getX();
+                    int elementY = elementVertices.get(i).getY();
+
+                    int inputX = inputElementVertices.get(i).getX();
+                    int inputY = inputElementVertices.get(i).getY();
+
+                    if( elementX != -1 )
+                    {
+                        if( inputX -10 <=  elementX && elementX <= inputX + 10)
+                        {
+                            num_vertices_verified++;
+                        }
+                    }
+                    else {
+                        num_vertices_verified++;
+                    }
+                    if( elementY != -1)
+                    {
+                        if( inputY -10 <=  elementX && elementX <= inputY + 10)
+                        {
+                            num_vertices_verified++;
+                        }
+                    }
+                    else{
+                        num_vertices_verified++;
+                    }
+
+                }
+
+                boolean vertex_verified = num_vertices_verified == element.getVertices().size() * 2;
 
                 if(text_verified)
                 {
@@ -102,7 +140,7 @@ public class ScreenData {
         }
         Log.d("CompareScreenTag", Integer.toString(correctElements) );
         Log.d("CompareScreenTag", "++++++++++++++++++++++++++++++++++++" );
-        if (correctElements == numElements)
+        if (correctElements <= numElements - 1 )
         {
             sameScreen = true;
         }
@@ -139,11 +177,13 @@ public class ScreenData {
         Log.d("CompareScreenTag", "______________" );
         return text_verified;
     }
+
     public void printScreenData(){
         for (ScreenElement element: elementList)
         {
             element.printScreenElement();
         }
+        Log.d("PrintScreenTag", "______________" );
     }
     // computes the minimum number of single-character edits required to change one word into the other. Strings do not have to be the same length
     public static int levenshteinDistance(String a, String b) {

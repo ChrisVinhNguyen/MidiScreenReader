@@ -81,24 +81,12 @@ public class ScreenData {
 
         for(ScreenElement element : this.elementList)
         {
-            // min number for viable levenshtein distance
-            float textThreshold = (float) (((float) element.getText().length())/2.0);
 
             for(ScreenElement inputElement : inputScreen.elementList)
             {
                 boolean text_verified = false;
                 if(!element.getText().equals("NULL")){
-                    int distance = levenshteinDistance(inputElement.getText(), element.getText());
-
-                    if(distance < textThreshold)
-                    {
-                        Log.d("CompareScreenTag", "FOUND!!!!!!!!!!!!" );
-                        text_verified = true;
-                    }
-                    Log.d("CompareScreenTag", inputElement.getText() + " , " + element.getText());
-                    Log.d("CompareScreenTag", Integer.toString(distance) + " , " + Float.toString(textThreshold) );
-
-                    Log.d("CompareScreenTag", "______________" );
+                    text_verified = textCompare(inputElement.getText(), element.getText());
                 }
                 else{
                     text_verified = true;
@@ -111,7 +99,6 @@ public class ScreenData {
                 }
             }
         }
-
         Log.d("CompareScreenTag", Integer.toString(correctElements) );
         Log.d("CompareScreenTag", "++++++++++++++++++++++++++++++++++++" );
         if (correctElements == numElements)
@@ -119,6 +106,37 @@ public class ScreenData {
             sameScreen = true;
         }
         return  sameScreen;
+    }
+
+    private boolean textCompare(String inputText, String text)
+    {
+        boolean text_verified = false;
+        // min number for viable levenshtein distance
+        float textThreshold = (float) (((float) text.length())/2.0);
+
+        int substring_start = 0;
+        int substring_end = text.length();
+        int distance = text.length();
+
+        while(substring_end < inputText.length())
+        {
+            int new_distance = levenshteinDistance(inputText.substring(substring_start,substring_end), text);
+            distance = Math.min(distance,new_distance);
+            substring_end++;
+            substring_start++;
+        }
+
+
+        if(distance < textThreshold)
+        {
+            Log.d("CompareScreenTag", "FOUND!!!!!!!!!!!!" );
+            text_verified = true;
+        }
+        Log.d("CompareScreenTag", inputText + " , " + text);
+        Log.d("CompareScreenTag", Integer.toString(distance) + " , " + Float.toString(textThreshold) );
+
+        Log.d("CompareScreenTag", "______________" );
+        return text_verified;
     }
     public void printScreenData(){
         for (ScreenElement element: elementList)

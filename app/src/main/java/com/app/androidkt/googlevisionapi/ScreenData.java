@@ -30,6 +30,7 @@ public class ScreenData {
 
     public ScreenData(BatchAnnotateImagesResponse response, Rect boundBox)
     {
+
         screenBoundingBox=boundBox;
         initialize(response);
     }

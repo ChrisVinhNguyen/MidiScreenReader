@@ -17,9 +17,14 @@ public class ScreenElement {
     public ScreenElement(String textData, List<Vertex> verticesData, Rect screenBoundingBox)
     {
         text = textData;
-        //Log.d("ScreenElementTag", "bounding box: " + screenBoundingBox);
         vertices = verticesData;
-
+        for (Vertex v:verticesData){
+            int xVal=v.getX();
+            int yVal=v.getY();
+            v.setX((xVal*100)/screenBoundingBox.width);
+            v.setY((yVal*100)/screenBoundingBox.height);
+        }
+        this.printScreenElement();
 
     }
 
@@ -28,8 +33,8 @@ public class ScreenElement {
     {
         text = textData;
         vertices = verticesData;
+        this.printScreenElement();
 
-        //this.printScreenElement();
     }
 
     public String getText(){ return text; }

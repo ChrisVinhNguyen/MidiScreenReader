@@ -368,7 +368,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         if(boundingBox!=null) {
             Bitmap resizedBitmap=Bitmap.createBitmap(bitmap, boundingBox.x,boundingBox.y,boundingBox.width,boundingBox.height);
-            Log.i("boundingbox","Height:"+ Integer.toString(resizedBitmap.getHeight())+"width:"+Integer.toString(resizedBitmap.getWidth())+++);
+            Log.i("boundingbox","Height:"+ Integer.toString(resizedBitmap.getHeight())+"width:"+Integer.toString(resizedBitmap.getWidth()));
             annotateImageReq.setImage(getImageEncodeImage(resizedBitmap));
 
         }else{

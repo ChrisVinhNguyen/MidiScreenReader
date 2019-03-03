@@ -26,6 +26,75 @@
       }
     },
     {
+      "description": "Category",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 9,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    },
+    {
+      "description": "USR",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 9,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    },
+    {
+      "description": "Common",
+      "boundingPoly": {
+        "vertices": [
+          {
+            "x": 9,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 220
+          },
+          {
+            "x": 124,
+            "y": 240
+          },
+          {
+            "x": 41,
+            "y": 240
+          }
+        ]
+      }
+    },
+    {
       "description": "NULL",
       "boundingPoly": {
         "vertices": [

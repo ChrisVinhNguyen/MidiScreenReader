@@ -253,13 +253,33 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     // perform image pre-processing on bitmap
     private Rect processBitmap(Mat bitmapMatrix)
     {
-
+        Rect screenBoundingBox = null;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Mat edges = new Mat();
+        List<MatOfPoint> contours = new ArrayList<>();
+        Imgproc.Canny(bitmapMatrix, edges, 100, 200);
+        Imgproc.findContours(edges, contours, new Mat(), RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
+        //finding the largest contour area in this case it should be the screen
+        double maxArea = -1;
+        int maxAreaIdx = -1;
+        for (int idx = 0; idx < contours.size(); idx++) {
+            Mat contour = contours.get(idx);
+            double contourarea = Imgproc.contourArea(contour);
+            if (contourarea > maxArea) {
+                maxArea = contourarea;
+                maxAreaIdx = idx;
+            }
+        }
+        //find the boundingbox of the screen and draw it on the picture
+        if (!contours.isEmpty()) {
+            screenBoundingBox = (Imgproc.boundingRect(contours.get(maxAreaIdx)));
+            rectangle(bitmapMatrix, new Point(screenBoundingBox.x, screenBoundingBox.y), new Point(screenBoundingBox.x + screenBoundingBox.width, screenBoundingBox.y + screenBoundingBox.height), new Scalar(100), 4);
+        }
         boolean processImage = sharedPreferences.getBoolean("ImageProcessEnable", true);
         Log.i("Preferences", "processImage" + processImage);
         if (!processImage)
-            return null;
+            return screenBoundingBox;
 
 
         String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "0.7");
@@ -278,7 +298,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         Log.i("Preferences", "ConvertToBW" + convertToBW);
 
         if (!convertToBW)
-            return null;
+            return screenBoundingBox;
 
         int rows=bitmapMatrix.rows();
         int cols=bitmapMatrix.cols();
@@ -320,34 +340,13 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
                 bitmapMatrix.put(i,j,value);
             }
         }
-        Mat edges= new Mat();
-        List<MatOfPoint> contours=new ArrayList<>();
-        Imgproc.Canny(bitmapMatrix,edges,100,200);
-        Imgproc.findContours(edges,contours, new Mat(),RETR_EXTERNAL,CHAIN_APPROX_SIMPLE);
-
-        //finding the largest contour area in this case it should be the screen
-        double maxArea = -1;
-        int maxAreaIdx = -1;
-        for (int idx = 0; idx < contours.size(); idx++) {
-            Mat contour = contours.get(idx);
-            double contourarea = Imgproc.contourArea(contour);
-            if (contourarea > maxArea) {
-                maxArea = contourarea;
-                maxAreaIdx = idx;
-            }
-        }
 
 
         kernSize = (int) (2 * Math.ceil(2 * sigmaAfter) + 1);
         Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaAfter);
 
-        //find the boundingbox of the screen and draw it on the picture
-        if(!contours.isEmpty()) {
-            Rect screenBoundingBox=(Imgproc.boundingRect(contours.get(maxAreaIdx)));
-            rectangle(bitmapMatrix, new Point(screenBoundingBox.x, screenBoundingBox.y), new Point(screenBoundingBox.x + screenBoundingBox.width, screenBoundingBox.y + screenBoundingBox.height), new Scalar(100), 4);
-            return screenBoundingBox;
-        }
-        return null;
+
+        return screenBoundingBox;
     }
 
     // calls the cloud vision api to perform ocr on the image

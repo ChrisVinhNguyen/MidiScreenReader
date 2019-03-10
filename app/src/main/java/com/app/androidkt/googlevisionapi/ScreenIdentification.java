@@ -44,6 +44,7 @@ public class ScreenIdentification {
         Log.d("IdentificationTag", "in identify screen");
         for(ScreenData searchScreen: screenSearchSet)
         {
+            Log.d("IdentificationTag", "Comparing screen" +  searchScreen.getName());
             if(searchScreen.compareScreen(inputScreen)){
                 Log.d("IdentificationTag", "Screen identified:" +  searchScreen.getName());
                 if(currentScreen != searchScreen.getName())

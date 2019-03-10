@@ -9,6 +9,7 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Vertex;
 
+import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public class ScreenData {
         int numElements = this.elementList.size();
         int correctElements = 0;
         //float vertexTreshold = 50;
-
+        Log.d("CompareScreenSmallTag", "____________________" );
         for(ScreenElement element : this.elementList)
         {
 
@@ -96,41 +97,6 @@ public class ScreenData {
                     text_verified = true;
                 }
 
-                List<Vertex> elementVertices = element.getVertices();
-                List<Vertex> inputElementVertices = inputElement.getVertices();
-                for(int i = 0; i < elementVertices.size(); i++)
-                {
-                    int elementX = elementVertices.get(i).getX();
-                    int elementY = elementVertices.get(i).getY();
-
-                    int inputX = inputElementVertices.get(i).getX();
-                    int inputY = inputElementVertices.get(i).getY();
-
-                    if( elementX != -1 )
-                    {
-                        if( inputX -10 <=  elementX && elementX <= inputX + 10)
-                        {
-                            num_vertices_verified++;
-                        }
-                    }
-                    else {
-                        num_vertices_verified++;
-                    }
-                    if( elementY != -1)
-                    {
-                        if( inputY -10 <=  elementX && elementX <= inputY + 10)
-                        {
-                            num_vertices_verified++;
-                        }
-                    }
-                    else{
-                        num_vertices_verified++;
-                    }
-
-                }
-
-                boolean vertex_verified = num_vertices_verified == element.getVertices().size() * 2;
-
                 if(text_verified)
                 {
                     correctElements++;
@@ -139,8 +105,10 @@ public class ScreenData {
             }
         }
         Log.d("CompareScreenTag", Integer.toString(correctElements) );
+        Log.d("CompareScreenSmallTag", this.screenName + Integer.toString(correctElements)  );
+        Log.d("CompareScreenSmallTag", "____________________" );
         Log.d("CompareScreenTag", "++++++++++++++++++++++++++++++++++++" );
-        if (correctElements <= numElements - 1 )
+        if (correctElements >= numElements - 1 )
         {
             sameScreen = true;
         }
@@ -151,7 +119,8 @@ public class ScreenData {
     {
         boolean text_verified = false;
         // min number for viable levenshtein distance
-        float textThreshold = (float) (((float) text.length())/2.0);
+        float textThreshold = (float) (((float) text.length() - 3));
+        textThreshold = Math.max(1,0);
 
         int substring_start = 0;
         int substring_end = text.length();
@@ -169,6 +138,7 @@ public class ScreenData {
         if(distance < textThreshold)
         {
             Log.d("CompareScreenTag", "FOUND!!!!!!!!!!!!" );
+            Log.d("CompareScreenSmallTag", "Found: " + text);
             text_verified = true;
         }
         Log.d("CompareScreenTag", inputText + " , " + text);

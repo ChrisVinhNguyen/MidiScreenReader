@@ -43,6 +43,7 @@ public class ScreenElement {
     public void printScreenElement()
     {
         Log.d("PrintScreenTag", "text: " + text + "  |  Bounding box: " + vertices );
+        Log.d("CompareScreenSmallTag", "text: " + text );
     }
 
 }

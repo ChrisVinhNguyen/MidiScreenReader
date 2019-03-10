@@ -1,27 +1,11 @@
 {
 
-  "master":
+  "Master":
   [
     {
       "description": "MASTER",
       "boundingPoly": {
         "vertices": [
-          {
-            "x": 9,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 240
-          },
-          {
-            "x": 41,
-            "y": 240
-          }
         ]
       }
     },
@@ -29,22 +13,6 @@
       "description": "Category",
       "boundingPoly": {
         "vertices": [
-          {
-            "x": 9,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 240
-          },
-          {
-            "x": 41,
-            "y": 240
-          }
         ]
       }
     },
@@ -52,22 +20,6 @@
       "description": "USR",
       "boundingPoly": {
         "vertices": [
-          {
-            "x": 9,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 240
-          },
-          {
-            "x": 41,
-            "y": 240
-          }
         ]
       }
     },
@@ -75,22 +27,195 @@
       "description": "Common",
       "boundingPoly": {
         "vertices": [
-          {
-            "x": 9,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 220
-          },
-          {
-            "x": 124,
-            "y": 240
-          },
-          {
-            "x": 41,
-            "y": 240
-          }
+        ]
+      }
+    }
+  ],
+  "Song":
+  [
+    {
+      "description": "SONG",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Groove",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Track",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    }
+  ],
+  "Record":
+  [
+    {
+      "description": "SONG",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "RecTr",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Type",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Quantize",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    }
+  ],
+  "Voice":
+  [
+    {
+      "description": "SONG",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Voice",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Volume",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "InsEF",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    }
+  ],
+  "Store":
+  [
+    {
+      "description": "All",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Store",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Patterns",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    }
+  ],
+  "Save confirmation":
+  [
+    {
+      "description": "Are",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "You",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Sure?",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    }
+  ],
+  "Saving":
+  [
+    {
+      "description": "PLease",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Keep",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Power",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "On.",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    }
+  ],
+  "Exit confirmation":
+  [
+    {
+      "description": "Edited",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "data",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Discarded.",
+      "boundingPoly": {
+        "vertices": [
         ]
       }
     }

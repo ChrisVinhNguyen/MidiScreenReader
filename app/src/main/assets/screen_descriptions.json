@@ -1,0 +1,66 @@
+{
+  "Master": {
+    "Description": {
+      "Beginner": "This mode lets you register settings that you often use in the Voice, Performance, Song or Pattern mode, and instantly recall the relevant mode and custom settings together in a single button press—without having to first select a mode. In addition, this mode lets you divide the keyboard into four separate sections—just as if you were playing four different MIDI keyboards.",
+      "Advanced": "Register or recall settings from the different modes."
+    },
+    "Actions": "Press [SONG] to go to the song screen."
+},
+  "Song": {
+    "Description": {
+      "Beginner": "This mode lets you record, edit and play your own original Songs.",
+      "Advanced": "Record, edit and play your own original Songs."
+    },
+    "Actions": "Press [REC] to go to the song record screen. Press [STORE] for  ..."
+  },
+  "Record": {
+    "Description": {
+      "Beginner": "This mode lets you adjust different song settings for your recording.",
+      "Advanced": "This mode lets you adjust different song settings for your recording."
+    },
+    "Actions": "Press [F2] to go to the voice function"
+  },
+  "Voice": {
+    "Description": {
+      "Beginner": "This synthesizer has a wealth of high quality, dynamic sounds—also referred to as 'Voices.'' You can play these Voices—one Voice at a time—from the keyboard in the Voice mode. This mode also lets you create your own original Voices.",
+      "Advanced": "You can play a variety of different sounds or create your own sounds in this mode."
+    },
+    "Actions": "Press [PLAY] to start recording. You will hear the metronome after pressing [PLAY] and your recording time will start. Afterwards, press [STOP] to end the recording."
+  },
+  "Store": {
+    "Description": {
+      "Beginner": "This mode lets you store the edited program to internal memory.",
+      "Advanced": "Store the edited program to internal memory."
+    },
+    "Actions": "Press [ENTER] to store all Songs and Patterns "
+  },
+  "Save confirmation": {
+    "Description": {
+      "Beginner": "Are you sure you want to save?",
+      "Advanced": "Are you sure you want to save?"
+    },
+    "Actions": "Press [EXIT] for No, Press [ENTER] for Yes."
+  },
+  "Saving": {
+    "Description": {
+      "Beginner": "Please keep power on. Saving in progress.",
+      "Advanced": "Please keep power on. Saving in progress."
+    },
+    "Actions": "No available actions."
+  },
+  "Exit confirmation": {
+    "Description": {
+      "Beginner": "You are exiting a screen in which you edited data and have not saved. Edited data will be discarded if you continue.",
+      "Advanced": "Edited data will be discarded."
+    },
+    "Actions": "Press [EXIT] for No, Press [ENTER] for Yes."
+  },
+  "Unknown": {
+    "Description": {
+      "Beginner": "Screen is not supported.",
+      "Advanced": "Screen is not supported."
+    },
+    "Actions": "Press [MASTER] to go back to the home page."
+  }
+}
+

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScreenTTSData {
-    private Map<String, JSONObject> screenDescriptions = new HashMap<>();
+    private Map<String, Map<String, String>> screenDescriptions = new HashMap<>();
 
     public ScreenTTSData() {
         try {
@@ -31,26 +31,33 @@ public class ScreenTTSData {
 
         for(int i = 0; i < keys.length(); i++) {
             String key = keys.get(i).toString();
-            Log.d("key ========= ", "key ========= " + key);
-            JSONObject screenInfoJson = screensJson.getJSONObject(key);
-            Log.d("screenInfoJson ====== ", "screenInfoJson ========= " + screenInfoJson);
 
-            screenDescriptions.put(key, screenInfoJson);
+            JSONObject screenInfoJson = screensJson.getJSONObject(key);
+
+            Map<String, String> screenInfo = new HashMap<>();
+
+            String advancedDescription = (String) screenInfoJson.getJSONObject("Description").get("Advanced");
+            String beginnerDescription = (String) screenInfoJson.getJSONObject("Description").get("Beginner");
+            String actions = (String) screenInfoJson.get("Actions");
+
+            screenInfo.put("advancedDescription", advancedDescription);
+            screenInfo.put("beginnerDescription", beginnerDescription);
+            screenInfo.put("actions", actions);
+
+            screenDescriptions.put(key, screenInfo);
         }
-        Log.d("screenDescriptions == ", "screenDescriptions ========= " + screenDescriptions);
-        Log.d("IdentificationTag", "done loading screen");
     }
 
     private String getBeginnerDescription(String screenName) {
-        JSONObject screenInfoJson = screenDescriptions.get(screenName).getJSONObject("beginner");
+        return screenDescriptions.get(screenName).get("beginnerDescription");
     }
 
     private String getAdvancedDescription(String screenName) {
-
+        return screenDescriptions.get(screenName).get("advancedDescription");
     }
 
     private String getActions(String screenName) {
-
+        return screenDescriptions.get(screenName).get("actions");
     }
 
     private String loadJSONFromAsset(Context context) {

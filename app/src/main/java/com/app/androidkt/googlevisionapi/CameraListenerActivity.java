@@ -78,6 +78,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     private GestureDetectorCompat mDetector;
     private ScreenIdentification screenIdentifier;
     private ScreenData currentScreenData;
+    private ScreenTTSData screenDescriptions;
 
     TextToSpeech tts;
 
@@ -170,6 +171,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         tts.setSpeechRate(speechRate);
 
         screenIdentifier = new ScreenIdentification();
+        screenDescriptions = new ScreenTTSData();
         // set up camera view
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
 

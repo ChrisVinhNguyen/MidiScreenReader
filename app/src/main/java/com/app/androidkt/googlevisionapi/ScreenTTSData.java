@@ -48,15 +48,15 @@ public class ScreenTTSData {
         }
     }
 
-    private String getBeginnerDescription(String screenName) {
+    public String getBeginnerDescription(String screenName) {
         return screenDescriptions.get(screenName).get("beginnerDescription");
     }
 
-    private String getAdvancedDescription(String screenName) {
+    public String getAdvancedDescription(String screenName) {
         return screenDescriptions.get(screenName).get("advancedDescription");
     }
 
-    private String getActions(String screenName) {
+    public String getActions(String screenName) {
         return screenDescriptions.get(screenName).get("actions");
     }
 

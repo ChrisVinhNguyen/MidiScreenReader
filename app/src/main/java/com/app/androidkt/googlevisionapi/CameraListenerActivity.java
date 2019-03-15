@@ -554,7 +554,11 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     @Override
     public boolean onDoubleTap(MotionEvent event) {
         // output the bounding vertices captured by the Google Vision API
-        convertResponseStringFromGesture(responseFromApi, "bounding");
+        String currentScreen = screenIdentifier.getCurrentScreen();
+        String actions = screenDescriptions.getActions(currentScreen);
+//        convertResponseStringFromGesture(responseFromApi, "bounding");
+        Toast.makeText(this, actions , Toast.LENGTH_SHORT).show();
+
         return true;
     }
 
@@ -568,7 +572,10 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         // output the current screen of keyboard
 
         //convertResponseStringFromGesture(responseFromApi, "description");
-        Toast.makeText(this, screenIdentifier.getCurrentScreen() , Toast.LENGTH_SHORT).show();
+        String currentScreen = screenIdentifier.getCurrentScreen();
+        String description = screenDescriptions.getAdvancedDescription(currentScreen);
+//        String description = screenDescriptions.getBeginnerDescription(currentScreen);
+        Toast.makeText(this, description , Toast.LENGTH_SHORT).show();
 
 
         return true;

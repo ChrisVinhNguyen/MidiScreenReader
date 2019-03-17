@@ -12,6 +12,20 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+/*
+* setting for turing begining/advanced
+* link to the gesture
+* make sure its connected to the screen identify
+* make settings page accessible
+* passing text into texttospeech
+* */
+
+
+
+
+
 public class ScreenTTSData {
     private Map<String, Map<String, String>> screenDescriptions = new HashMap<>();
 
@@ -49,15 +63,32 @@ public class ScreenTTSData {
     }
 
     public String getBeginnerDescription(String screenName) {
-        return screenDescriptions.get(screenName).get("beginnerDescription");
+        Map<String,String> screen=screenDescriptions.get(screenName);
+        if(screen==null){
+
+            screen=screenDescriptions.get("Unknown");
+            return "";
+        }
+        return screen.get("beginnerDescription");
     }
 
     public String getAdvancedDescription(String screenName) {
-        return screenDescriptions.get(screenName).get("advancedDescription");
+        Map<String,String> screen=screenDescriptions.get(screenName);
+        if(screen==null){
+            screen=screenDescriptions.get("Unknown");
+            return "";
+
+        }
+        return screen.get("advancedDescription");
     }
 
     public String getActions(String screenName) {
-        return screenDescriptions.get(screenName).get("actions");
+        Map<String,String> screen=screenDescriptions.get(screenName);
+        if(screen==null){
+            screen=screenDescriptions.get("Unknown");
+            return "";
+        }
+        return screen.get("actions");
     }
 
     private String loadJSONFromAsset(Context context) {

@@ -206,10 +206,19 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String speechRateString = sharedPreferences.getString("SpeechRateValue", "1");
+
+        float speechRate=parseFloat(speechRateString);
+        tts.setSpeechRate(speechRate);
+
     }
 
     public void onDestroy() {
         super.onDestroy();
+        tts.speak(" ",TextToSpeech.QUEUE_FLUSH,null,null);
+
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -220,6 +229,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     // is called when camera view stops
     public void onCameraViewStopped() {
+        tts.speak(" ",TextToSpeech.QUEUE_FLUSH,null,null);
+
     }
 
     // this function is called for every frame and handles the processing of each frame
@@ -249,7 +260,10 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         }
 
         screenIdentifier.identifyScreen(currentScreenData);
+        String curScreen =screenIdentifier.getCurrentScreen();
 
+        String description = getScreenDescription(curScreen);
+        saySomething(description);
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
@@ -556,7 +570,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         // output the bounding vertices captured by the Google Vision API
         String currentScreen = screenIdentifier.getCurrentScreen();
         String actions = screenDescriptions.getActions(currentScreen);
-//        convertResponseStringFromGesture(responseFromApi, "bounding");
+        //    convertResponseStringFromGesture(responseFromApi, "bounding");
+        saySomething(actions);
         Toast.makeText(this, actions , Toast.LENGTH_SHORT).show();
 
         return true;
@@ -573,11 +588,9 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         //convertResponseStringFromGesture(responseFromApi, "description");
         String currentScreen = screenIdentifier.getCurrentScreen();
-        String description = screenDescriptions.getAdvancedDescription(currentScreen);
-//        String description = screenDescriptions.getBeginnerDescription(currentScreen);
+        String description=getScreenDescription(currentScreen);
         Toast.makeText(this, description , Toast.LENGTH_SHORT).show();
-
-
+        saySomething(description);
         return true;
     }
 
@@ -618,6 +631,18 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             message = "Nothing Found";
         }
         return message;
+    }
+
+    private String getScreenDescription(String currentScreen){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String descriptionLevel = sharedPreferences.getString("DescriptionLevel", "Beginner");
+        String description="";
+        if(descriptionLevel.equals("Beginner")){
+            description = screenDescriptions.getBeginnerDescription(currentScreen);
+        }else {
+            description = screenDescriptions.getAdvancedDescription(currentScreen);
+        }
+        return description;
     }
 }
 

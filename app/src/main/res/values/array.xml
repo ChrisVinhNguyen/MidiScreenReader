@@ -66,4 +66,14 @@
         <item>2.9</item>
     </string-array>
 
+    <string-array name="Descriptions">
+        <item>Advanced</item>
+        <item>Beginner</item>
+
+    </string-array>
+    <string-array name="DescriptionValues">
+        <item>Advanced</item>
+        <item>Beginner</item>
+
+    </string-array>
 </resources>

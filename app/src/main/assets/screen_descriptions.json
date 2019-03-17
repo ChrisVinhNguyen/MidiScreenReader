@@ -1,22 +1,22 @@
 {
   "Master": {
     "Description": {
-      "Beginner": "This mode lets you register settings that you often use in the Voice, Performance, Song or Pattern mode, and instantly recall the relevant mode and custom settings together in a single button press—without having to first select a mode. In addition, this mode lets you divide the keyboard into four separate sections—just as if you were playing four different MIDI keyboards.",
-      "Advanced": "Register or recall settings from the different modes."
+      "Beginner": "The Master mode lets you register settings that you often use in the Voice, Performance, Song or Pattern mode, and instantly recall the relevant mode and custom settings together in a single button press—without having to first select a mode. In addition, this mode lets you divide the keyboard into four separate sections—just as if you were playing four different MIDI keyboards.",
+      "Advanced": "You are currently in the Master mode. Register or recall settings from the different modes."
     },
     "Actions": "Press [SONG] to go to the song screen."
 },
   "Song": {
     "Description": {
-      "Beginner": "This mode lets you record, edit and play your own original Songs.",
-      "Advanced": "Record, edit and play your own original Songs."
+      "Beginner": "The Song mode lets you record, edit and play your own original Songs.",
+      "Advanced": "You are currently in the Song mode. Record, edit and play your own original Songs."
     },
     "Actions": "Press [REC] to go to the song record screen. Press [STORE] for  ..."
   },
   "Record": {
     "Description": {
-      "Beginner": "This mode lets you adjust different song settings for your recording.",
-      "Advanced": "This mode lets you adjust different song settings for your recording."
+      "Beginner": "The Record mode lets you adjust different song settings for your recording.",
+      "Advanced": "You are currently in the Record mode which lets you adjust different song settings for your recording."
     },
     "Actions": "Press [F2] to go to the voice function"
   },

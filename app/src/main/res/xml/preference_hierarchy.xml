@@ -32,4 +32,13 @@
             app:entries="@array/Numbers"
             app:entryValues="@array/NumbersValue" />
     </PreferenceCategory>
+    <PreferenceCategory
+        app:key="Description Level"
+        app:title="Audio Feedback Settings">
+        <ListPreference
+            app:key="DescriptionLevel"
+            app:title="Set Description Levrl"
+            app:entries="@array/Descriptions"
+            app:entryValues="@array/DescriptionValues" />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

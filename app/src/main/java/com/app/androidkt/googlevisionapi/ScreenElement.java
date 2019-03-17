@@ -22,7 +22,7 @@ public class ScreenElement {
             Integer xVal=v.getX();
             Integer yVal=v.getY();
             v.setX(xVal==null?0:(xVal*100)/screenBoundingBox.width);
-            v.setY(yVal==null?0:(yVal*100)/screenBoundingBox.height);
+            v.setY(yVal==null?0: (yVal*100)/screenBoundingBox.height);
         }
         this.printScreenElement();
 

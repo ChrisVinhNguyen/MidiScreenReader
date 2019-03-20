@@ -5,13 +5,13 @@
       "Advanced": "You are currently in the Master mode. Register or recall settings from the different modes."
     },
     "Actions": "Press [SONG] to go to the song screen."
-},
+  },
   "Song": {
     "Description": {
       "Beginner": "The Song mode lets you record, edit and play your own original Songs.",
       "Advanced": "You are currently in the Song mode. Record, edit and play your own original Songs."
     },
-    "Actions": "Press [REC] to go to the song record screen. Press [STORE] for  ..."
+    "Actions": "Press [REC] to go to the song record screen. Press [STORE] to go to the Store screen and save your program to internal memory."
   },
   "Record": {
     "Description": {

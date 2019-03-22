@@ -263,7 +263,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         String curScreen =screenIdentifier.getCurrentScreen();
 
         String description = getScreenDescription(curScreen);
-        saySomething(description);
+        //saySomething(description);
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }

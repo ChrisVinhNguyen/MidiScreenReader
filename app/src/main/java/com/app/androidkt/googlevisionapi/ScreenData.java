@@ -75,7 +75,7 @@ public class ScreenData {
             }
         }
     }
-    public boolean compareScreen(ScreenData inputScreen)
+    public int compareScreen(ScreenData inputScreen)
     {
         boolean sameScreen = false;
         int numElements = this.elementList.size();
@@ -112,7 +112,7 @@ public class ScreenData {
         {
             sameScreen = true;
         }
-        return  sameScreen;
+        return  correctElements;
     }
 
     private boolean textCompare(String inputText, String text)

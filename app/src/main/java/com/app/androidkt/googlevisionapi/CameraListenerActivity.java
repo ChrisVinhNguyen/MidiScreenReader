@@ -649,13 +649,13 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             description = screenDescriptions.getAdvancedDescription(currentScreen);
         }
         saySomething(description);
-        Toast.makeText(this, description , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, description , Toast.LENGTH_SHORT).show();
     }
 
     private void getScreenActions(String currentScreen){
         String actions = screenDescriptions.getActions(currentScreen);
         saySomething(actions);
-        Toast.makeText(this, actions , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, actions , Toast.LENGTH_SHORT).show();
     }
 
     private void sayScreenandActions(String currentScreen){
@@ -666,10 +666,10 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         if(descriptionLevel.equals("Beginner")){
             fullDescription = "You are currently on " + currentScreen + "." + actions;
         }else {
-            fullDescription = currentScreen + "." + actions;
+            fullDescription = currentScreen + actions;
         }
         saySomething(fullDescription);
-        Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
     }
 
     // returns true if the screen is correctly calibrated

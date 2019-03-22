@@ -43,19 +43,26 @@ public class ScreenIdentification {
     {
         Log.d("IdentificationTag", "in identify screen");
         boolean new_screen = false;
+        int max_correct_elements = 0;
+        ScreenData newScreen = inputScreen;
         for(ScreenData searchScreen: screenSearchSet)
         {
             Log.d("IdentificationTag", "Comparing screen" +  searchScreen.getName());
-            if(searchScreen.compareScreen(inputScreen)){
-                Log.d("IdentificationTag", "Screen identified:" +  searchScreen.getName());
-                if(currentScreen != searchScreen.getName())
-                {
-                    currentScreen = searchScreen.getName();
-                    new_screen = true;
-                    Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
-                }
+            int current_correct_elements = searchScreen.compareScreen(inputScreen);
+            if(current_correct_elements >= max_correct_elements){
+                newScreen = searchScreen;
+                max_correct_elements = current_correct_elements;
             }
         }
+
+
+        if(currentScreen != newScreen.getName())
+        {
+            currentScreen = newScreen.getName();
+            new_screen = true;
+            Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
+        }
+
         return new_screen;
     }
 

@@ -41,14 +41,14 @@
       }
     },
     {
-      "description": "Groove",
+      "description": "Meas",
       "boundingPoly": {
         "vertices": [
         ]
       }
     },
     {
-      "description": "Track",
+      "description": "Trans",
       "boundingPoly": {
         "vertices": [
         ]

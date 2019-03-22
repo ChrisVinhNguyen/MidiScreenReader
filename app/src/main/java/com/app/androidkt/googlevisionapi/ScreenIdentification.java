@@ -39,9 +39,10 @@ public class ScreenIdentification {
         }
     }
 
-    public void identifyScreen(ScreenData inputScreen)
+    public boolean identifyScreen(ScreenData inputScreen)
     {
         Log.d("IdentificationTag", "in identify screen");
+        boolean new_screen = false;
         for(ScreenData searchScreen: screenSearchSet)
         {
             Log.d("IdentificationTag", "Comparing screen" +  searchScreen.getName());
@@ -50,10 +51,12 @@ public class ScreenIdentification {
                 if(currentScreen != searchScreen.getName())
                 {
                     currentScreen = searchScreen.getName();
+                    new_screen = true;
                     Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
                 }
             }
         }
+        return new_screen;
     }
 
     private void loadScreenSearchSet() throws JSONException {

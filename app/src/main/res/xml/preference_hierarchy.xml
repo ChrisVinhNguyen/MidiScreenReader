@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
-        app:key="image_category"
-        app:title="ImageProc settings">
-        <SwitchPreferenceCompat
-            app:key="ImageProcessEnable"
-            app:title="Enable image processing" />
-
-        <SwitchPreferenceCompat
-            app:key="ConvertToBW"
-            app:title="Enable image convert to black and white" />
-
-        <ListPreference
-            app:key="GaussValueBefore"
-            app:title="Gaussian Blur Value 1"
-            app:entries="@array/Numbers"
-            app:entryValues="@array/NumbersValue" />
-
-        <ListPreference
-            app:key="GaussValueAfter"
-            app:title="Gaussian Blur Value 2"
-            app:entries="@array/Numbers"
-            app:entryValues="@array/NumbersValue" />
-    </PreferenceCategory>
-    <PreferenceCategory
         app:key="Text to Speech"
         app:title="Text to Speech Settings">
         <ListPreference
@@ -37,7 +14,7 @@
         app:title="Audio Feedback Settings">
         <ListPreference
             app:key="DescriptionLevel"
-            app:title="Set Description Levrl"
+            app:title="Set Description Level"
             app:entries="@array/Descriptions"
             app:entryValues="@array/DescriptionValues" />
     </PreferenceCategory>

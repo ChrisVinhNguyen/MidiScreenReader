@@ -2,6 +2,7 @@ package com.app.androidkt.googlevisionapi;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -249,6 +250,11 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         Log.d("gestureTag", "IN SINGLE TAP");
 
+        if(!calibrateScreen(screenBoundingBox))
+        {
+            return frameMat;
+        }
+
         if(screenBoundingBox==null) {
             Log.d("TempTag1", "initializing without bounding box");
             currentScreenData = new ScreenData(responseFromApi);
@@ -259,11 +265,12 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         }
 
-        screenIdentifier.identifyScreen(currentScreenData);
-        String curScreen =screenIdentifier.getCurrentScreen();
+        if(screenIdentifier.identifyScreen(currentScreenData))
+        {
+            String curScreen =screenIdentifier.getCurrentScreen();
+            sayScreenandActions(curScreen);
+        }
 
-        String description = getScreenDescription(curScreen);
-        //saySomething(description);
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
@@ -476,13 +483,13 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     }
 
     // read a string out loud
-    private void saySomething(String msg){
+    public void saySomething(String msg){
         if(msg.length()>getMaxSpeechInputLength()){
 
             msg = msg.substring(0,getMaxSpeechInputLength()-2);
         }
 
-        tts.speak(msg,TextToSpeech.QUEUE_ADD,null,null);
+        tts.speak(msg,TextToSpeech.QUEUE_FLUSH,null,null);
     }
 
     public int findPeaks(double[] data, int[] peaks, int width) {
@@ -551,7 +558,12 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     @Override
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX,
                             float distanceY) {
-        //Toast.makeText(this,"onScroll: " + event1.toString() + event2.toString(), Toast.LENGTH_SHORT).show();
+        if(distanceX + distanceY > 35)
+        {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        //Toast.makeText(this, "Unknown Screen" , Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -569,11 +581,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     public boolean onDoubleTap(MotionEvent event) {
         // output the bounding vertices captured by the Google Vision API
         String currentScreen = screenIdentifier.getCurrentScreen();
-        String actions = screenDescriptions.getActions(currentScreen);
-        //    convertResponseStringFromGesture(responseFromApi, "bounding");
-        saySomething(actions);
-        Toast.makeText(this, actions , Toast.LENGTH_SHORT).show();
-
+        getScreenActions(currentScreen);
         return true;
     }
 
@@ -588,9 +596,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         //convertResponseStringFromGesture(responseFromApi, "description");
         String currentScreen = screenIdentifier.getCurrentScreen();
-        String description=getScreenDescription(currentScreen);
-        Toast.makeText(this, description , Toast.LENGTH_SHORT).show();
-        saySomething(description);
+        getScreenDescription(currentScreen);
         return true;
     }
 
@@ -633,7 +639,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         return message;
     }
 
-    private String getScreenDescription(String currentScreen){
+    private void getScreenDescription(String currentScreen){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String descriptionLevel = sharedPreferences.getString("DescriptionLevel", "Beginner");
         String description="";
@@ -642,7 +648,34 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         }else {
             description = screenDescriptions.getAdvancedDescription(currentScreen);
         }
-        return description;
+        saySomething(description);
+        Toast.makeText(this, description , Toast.LENGTH_SHORT).show();
+    }
+
+    private void getScreenActions(String currentScreen){
+        String actions = screenDescriptions.getActions(currentScreen);
+        saySomething(actions);
+        Toast.makeText(this, actions , Toast.LENGTH_SHORT).show();
+    }
+
+    private void sayScreenandActions(String currentScreen){
+        String actions = screenDescriptions.getActions(currentScreen);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String descriptionLevel = sharedPreferences.getString("DescriptionLevel", "Beginner");
+        String fullDescription="";
+        if(descriptionLevel.equals("Beginner")){
+            fullDescription = "You are currently on " + currentScreen + "." + actions;
+        }else {
+            fullDescription = currentScreen + "." + actions;
+        }
+        saySomething(fullDescription);
+        Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
+    }
+
+    // returns true if the screen is correctly calibrated
+    private boolean calibrateScreen(Rect boundary){
+        //Log.d()
+        return true;
     }
 }
 

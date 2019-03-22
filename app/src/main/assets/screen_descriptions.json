@@ -11,7 +11,7 @@
       "Beginner": "The Song mode lets you record, edit and play your own original Songs.",
       "Advanced": "The Song mode lets you record, edit and play your own original Songs."
     },
-    "Actions": "Press [REC] to go to the song record screen. Press [STORE] to go to the Store screen and save your program to internal memory."
+    "Actions": "Press [REC] to go to the song record screen. Press [STORE] to go to the Store screen."
   },
   "Record": {
     "Description": {

@@ -488,7 +488,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         for(String str:msg){
 
             tts.speak(str,TextToSpeech.QUEUE_ADD,null,null);
-            tts.playSilentUtterance(1000,TextToSpeech.QUEUE_ADD,null);
+            tts.playSilentUtterance(500,TextToSpeech.QUEUE_ADD,null);
 
         }
 
@@ -567,7 +567,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     @Override
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX,
                             float distanceY) {
-        if(distanceX + distanceY > 35)
+        if(distanceX + distanceY > 25)
         {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -588,7 +588,8 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     @Override
     public boolean onDoubleTap(MotionEvent event) {
-        // output the bounding vertices captured by the Google Vision API
+        // output the bounding vertices captured by the Google Vision API\
+        tts.playSilentUtterance(1,TextToSpeech.QUEUE_FLUSH,null);
         String currentScreen = screenIdentifier.getCurrentScreen();
         getScreenActions(currentScreen);
         return true;
@@ -604,6 +605,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         // output the current screen of keyboard
 
         //convertResponseStringFromGesture(responseFromApi, "description");
+        tts.playSilentUtterance(1,TextToSpeech.QUEUE_FLUSH,null);
         String currentScreen = screenIdentifier.getCurrentScreen();
         getScreenDescription(currentScreen);
         return true;
@@ -671,7 +673,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         String actions = screenDescriptions.getActions(currentScreen);
         List<String> fullDescription= new ArrayList<String>();
 
-        fullDescription.add("You are currently on " + currentScreen + "screen\\." );
+        fullDescription.add("You are currently on " + currentScreen + "screen." );
         fullDescription.add(actions);
 
         saySomething(fullDescription);

@@ -23,11 +23,6 @@
         android:theme="@style/AppTheme"
         android:name="com.app.androidkt.googlevisionapi.AppContext">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".VisionAPI" />
         <activity android:name=".TextToSpeechActivity" />
@@ -45,7 +40,13 @@
         <activity
             android:name=".CameraListenerActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".TakePictureAuto" />
         <activity android:name=".SettingsActivity"></activity>
     </application>

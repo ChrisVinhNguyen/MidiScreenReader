@@ -1,17 +1,17 @@
-{
+{//These are the descriptions of the implemented screens
   "Master": {
     "Description": {
-      "Beginner": "The Master mode lets you register settings that you often use in the Voice, Performance, Song or Pattern mode, and instantly recall the relevant mode and custom settings together in a single button press—without having to first select a mode. In addition, this mode lets you divide the keyboard into four separate sections—just as if you were playing four different MIDI keyboards.",
+      "Beginner": "The Master mode lets you register and recall settings that you use in the Voice, Performance, Song or Pattern mode.",
       "Advanced": "You are currently in the Master mode. Register or recall settings from the different modes."
     },
     "Actions": "Press [SONG] to go to the song screen."
-},
+  },
   "Song": {
     "Description": {
       "Beginner": "The Song mode lets you record, edit and play your own original Songs.",
       "Advanced": "You are currently in the Song mode. Record, edit and play your own original Songs."
     },
-    "Actions": "Press [REC] to go to the song record screen. Press [STORE] for  ..."
+    "Actions": "Press [REC] to go to the song record screen. Press [STORE] to go to the Store screen and save your program to internal memory."
   },
   "Record": {
     "Description": {
@@ -22,7 +22,7 @@
   },
   "Voice": {
     "Description": {
-      "Beginner": "This synthesizer has a wealth of high quality, dynamic sounds—also referred to as 'Voices.'' You can play these Voices—one Voice at a time—from the keyboard in the Voice mode. This mode also lets you create your own original Voices.",
+      "Beginner": "The Voice mode allows you to play a variety of different sounds or create your own original sounds in this mode.",
       "Advanced": "You can play a variety of different sounds or create your own sounds in this mode."
     },
     "Actions": "Press [PLAY] to start recording. You will hear the metronome after pressing [PLAY] and your recording time will start. Afterwards, press [STOP] to end the recording."

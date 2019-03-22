@@ -1,6 +1,8 @@
 package com.app.androidkt.googlevisionapi;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +21,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    public void openCameraListenerActivity(View view) {
+        Intent intent = new Intent(this, CameraListenerActivity.class);
+        startActivity(intent);
+    }
 /*
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {

@@ -55,14 +55,14 @@ public class ScreenIdentification {
             }
         }
 
-
-        if(currentScreen != newScreen.getName())
-        {
-            currentScreen = newScreen.getName();
-            new_screen = true;
-            Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
+        if(max_correct_elements >= 1 ){
+            if(currentScreen != newScreen.getName())
+            {
+                currentScreen = newScreen.getName();
+                new_screen = true;
+                Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
+            }
         }
-
         return new_screen;
     }
 

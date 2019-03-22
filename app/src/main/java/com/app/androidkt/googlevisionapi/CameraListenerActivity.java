@@ -660,14 +660,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     private void sayScreenandActions(String currentScreen){
         String actions = screenDescriptions.getActions(currentScreen);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String descriptionLevel = sharedPreferences.getString("DescriptionLevel", "Beginner");
-        String fullDescription="";
-        if(descriptionLevel.equals("Beginner")){
-            fullDescription = "You are currently on " + currentScreen + "." + actions;
-        }else {
-            fullDescription = currentScreen + actions;
-        }
+        String fullDescription = "You are currently on " + currentScreen + "screen\\." + actions;
         saySomething(fullDescription);
         //Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
     }

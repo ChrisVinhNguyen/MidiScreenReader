@@ -483,15 +483,24 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     }
 
     // read a string out loud
-    public void saySomething(String msg){
-        if(msg.length()>getMaxSpeechInputLength()){
+    public void saySomething(List<String> msg){
 
-            msg = msg.substring(0,getMaxSpeechInputLength()-2);
+        for(String str:msg){
+
+            tts.speak(str,TextToSpeech.QUEUE_ADD,null,null);
+            tts.playSilentUtterance(1000,TextToSpeech.QUEUE_ADD,null);
+
         }
 
-        tts.speak(msg,TextToSpeech.QUEUE_FLUSH,null,null);
-    }
 
+    }
+    // read a string out loud
+    public void saySomething(String msg){
+
+            tts.speak(msg,TextToSpeech.QUEUE_ADD,null,null);
+            tts.playSilentUtterance(100,TextToSpeech.QUEUE_ADD,null);
+
+    }
     public int findPeaks(double[] data, int[] peaks, int width) {
         int peakCount = 0;
         int maxp = 0;
@@ -660,7 +669,11 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
     private void sayScreenandActions(String currentScreen){
         String actions = screenDescriptions.getActions(currentScreen);
-        String fullDescription = "You are currently on " + currentScreen + "screen\\." + actions;
+        List<String> fullDescription= new ArrayList<String>();
+
+        fullDescription.add("You are currently on " + currentScreen + "screen\\." );
+        fullDescription.add(actions);
+
         saySomething(fullDescription);
         //Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
     }

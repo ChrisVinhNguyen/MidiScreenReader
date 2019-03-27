@@ -334,7 +334,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         int kernSize = (int) (2 * Math.ceil(2 * sigmaBefore) + 1);
         Imgproc.GaussianBlur(bitmapMatrix, bitmapMatrix, new org.opencv.core.Size(kernSize, kernSize), sigmaBefore);
 
-        boolean convertToBW = sharedPreferences.getBoolean("ConvertToBW", true);
+        boolean convertToBW = sharedPreferences.getBoolean("ConvertToBW", false);
         Log.i("Preferences", "ConvertToBW" + convertToBW);
 
         if (!convertToBW)

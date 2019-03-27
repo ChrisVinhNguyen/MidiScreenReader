@@ -84,6 +84,13 @@
         "vertices": [
         ]
       }
+    },
+    {
+      "description": "Overdub",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
     }
   ],
   "Voice":
@@ -96,7 +103,7 @@
       }
     },
     {
-      "description": "Voice",
+      "description": "Pan",
       "boundingPoly": {
         "vertices": [
         ]
@@ -135,6 +142,20 @@
     },
     {
       "description": "Patterns",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Press",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
+      "description": "Enter",
       "boundingPoly": {
         "vertices": [
         ]

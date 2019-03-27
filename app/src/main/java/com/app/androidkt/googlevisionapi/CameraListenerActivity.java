@@ -90,6 +90,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     int sleep_time = 2000;
     double sigmaKernBefore = .9;
     double sigmaKernAfter = .3;
+    int wrong_screen_count = 0;
 
     float initialX, initialY;
 
@@ -268,9 +269,22 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         if(screenIdentifier.identifyScreen(currentScreenData))
         {
             String curScreen =screenIdentifier.getCurrentScreen();
+            flushQueue();
             sayScreenandActions(curScreen);
+            wrong_screen_count = 0;
         }
-
+        else{
+            wrong_screen_count++;
+            Log.d("Temptag3", Integer.toString(wrong_screen_count));
+            //if( wrong_screen_count > 10)
+//            {
+//                screenIdentifier.setScreenUnknown();
+//                String curScreen =screenIdentifier.getCurrentScreen();
+//                flushQueue();
+//                sayScreenandActions(curScreen);
+//                wrong_screen_count = 0;
+//            }
+        }
         Utils.bitmapToMat(frameBitmap, frameMat);
         return frameMat;
     }
@@ -499,6 +513,13 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
             tts.speak(msg,TextToSpeech.QUEUE_ADD,null,null);
             tts.playSilentUtterance(100,TextToSpeech.QUEUE_ADD,null);
+
+    }
+
+    public void flushQueue(){
+
+        tts.speak(" ",TextToSpeech.QUEUE_FLUSH,null,null);
+        tts.playSilentUtterance(100,TextToSpeech.QUEUE_FLUSH,null);
 
     }
     public int findPeaks(double[] data, int[] peaks, int width) {

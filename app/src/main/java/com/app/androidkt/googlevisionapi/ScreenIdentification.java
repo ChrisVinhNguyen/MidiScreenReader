@@ -55,7 +55,7 @@ public class ScreenIdentification {
             }
         }
 
-        if(max_correct_elements >= 1 ){
+        if(max_correct_elements > 1 ){
             if(currentScreen != newScreen.getName())
             {
                 currentScreen = newScreen.getName();
@@ -132,6 +132,10 @@ public class ScreenIdentification {
         }
         return json;
 
+    }
+    public void setScreenUnknown()
+    {
+        currentScreen = "Unknown";
     }
 }
 

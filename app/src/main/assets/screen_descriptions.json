@@ -4,42 +4,42 @@
       "Beginner": "The Master mode lets you register and recall settings that you use in the Voice, Performance, Song or Pattern mode.",
       "Advanced": "You are currently in the Master mode. Register or recall settings from the different modes."
     },
-    "Actions": "Press [SONG] to go to the song screen."
+    "Actions": "Press two to go to the song screen."
   },
   "Song": {
     "Description": {
       "Beginner": "The Song mode lets you record, edit and play your own original Songs.",
       "Advanced": "The Song mode lets you record, edit and play your own original Songs."
     },
-    "Actions": "Press [REC] to go to the song record screen. Press [STORE] to go to the Store screen. Press [Master] to return to the Master screen."
+    "Actions": "Press three to go to the song record screen. Press four to go to the Store screen. Press one to return to the Master screen."
   },
   "Record": {
     "Description": {
       "Beginner": "The Record mode lets you adjust different song settings for your recording.",
       "Advanced": "The Record mode lets you adjust different song settings for your recording."
     },
-    "Actions": "Press [F2] to go to the voice function. Press [Song] to return to the song screen. Press [Master] to return to the Master screen."
+    "Actions": "Press five to go to the voice function. Press two to return to the song screen. Press one to return to the Master screen."
   },
   "Voice": {
     "Description": {
       "Beginner": "The Voice mode allows you to play a variety of different sounds or create your own original sounds in this mode.",
       "Advanced": "You can play a variety of different sounds or create your own sounds in this mode."
     },
-    "Actions": "Press [PLAY] to start recording. Press [STOP] to end the recording and return to song screen. Press [Master] to return to the Master screen."
+    "Actions": "Press six to start recording. Press seven to end the recording and return to song screen. Press one to return to the Master screen."
   },
   "Store": {
     "Description": {
       "Beginner": "This mode lets you store the edited program to internal memory.",
       "Advanced": "Store the edited program to internal memory."
     },
-    "Actions": "Press [ENTER] to store all Songs and Patterns. "
+    "Actions": "Press eight to store all Songs and Patterns. "
   },
   "Save confirmation": {
     "Description": {
       "Beginner": "Are you sure you want to save?",
       "Advanced": "Are you sure you want to save?"
     },
-    "Actions": "Press [EXIT] for No, Press [ENTER] for Yes and return to the song screen."
+    "Actions": "Press nine for No, Press eight for Yes and return to the song screen."
   },
   "Saving": {
     "Description": {
@@ -53,14 +53,14 @@
       "Beginner": "You are exiting a screen in which you edited data and have not saved. Edited data will be discarded if you continue.",
       "Advanced": "Edited data will be discarded."
     },
-    "Actions": "Press [EXIT] for No, Press [ENTER] for Yes and continue back to the master screen."
+    "Actions": "Press nine for No, Press eight for Yes and continue back to the master screen."
   },
   "Unknown": {
     "Description": {
       "Beginner": "Screen is not supported.",
       "Advanced": "Screen is not supported."
     },
-    "Actions": "Press [MASTER] to go back to the home page."
+    "Actions": "Press one to go back to the home page."
   }
 }
 

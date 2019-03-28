@@ -24,7 +24,7 @@ public class ScreenIdentification {
     //will need to replace list with state machine here
     private List<ScreenData> screenSearchSet;
     private String currentScreen;
-
+    private int unknownScreenNum=0;
     public String getCurrentScreen() { return currentScreen; }
 
     public ScreenIdentification()
@@ -61,6 +61,18 @@ public class ScreenIdentification {
                 currentScreen = newScreen.getName();
                 new_screen = true;
                 Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
+
+            }
+            unknownScreenNum=0;
+        }else{
+             if(currentScreen=="Unknown") {
+                unknownScreenNum = 0;
+            }else if(unknownScreenNum>0){
+                currentScreen = "Unknown";
+                new_screen = true;
+                Log.d("IdentificationTag", "Updating current screen to:" +  currentScreen);
+            }else{
+                unknownScreenNum++;
             }
         }
         return new_screen;
@@ -136,6 +148,10 @@ public class ScreenIdentification {
     public void setScreenUnknown()
     {
         currentScreen = "Unknown";
+    }
+    public void setScreenUncalibrated()
+    {
+        currentScreen = "Uncalibrated";
     }
 }
 

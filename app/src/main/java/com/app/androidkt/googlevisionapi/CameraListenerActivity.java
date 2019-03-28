@@ -82,7 +82,7 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     private ScreenTTSData screenDescriptions;
 
     TextToSpeech tts;
-
+    int calibrated=0;
     // variables to control the quality and rate of the image passed to the api;
     int width = 640;
     int height = 480;
@@ -251,9 +251,17 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
 
         Log.d("gestureTag", "IN SINGLE TAP");
 
-        if(!calibrateScreen(screenBoundingBox))
-        {
+        if(!calibrateScreen(screenBoundingBox)){
+            calibrated++;
+            if(calibrated==3) {
+                screenIdentifier.setScreenUncalibrated();
+                String curScreen =screenIdentifier.getCurrentScreen();
+                flushQueue();
+                sayScreenandActionsUncalibrated(curScreen);
+            }
             return frameMat;
+        }else{
+            calibrated=0;
         }
 
         if(screenBoundingBox==null) {
@@ -315,15 +323,15 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
             screenBoundingBox = (Imgproc.boundingRect(contours.get(maxAreaIdx)));
             rectangle(bitmapMatrix, new Point(screenBoundingBox.x, screenBoundingBox.y), new Point(screenBoundingBox.x + screenBoundingBox.width, screenBoundingBox.y + screenBoundingBox.height), new Scalar(100), 4);
         }
-        boolean processImage = sharedPreferences.getBoolean("ImageProcessEnable", true);
+        boolean processImage = sharedPreferences.getBoolean("ImageProcessEnable", false);
         Log.i("Preferences", "processImage" + processImage);
 
         if (!processImage)
             return screenBoundingBox;
 
 
-        String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "0.7");
-        String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "0.3");
+        String sigmaBeforeString = sharedPreferences.getString("GaussValueBefore", "0.8");
+        String sigmaAfterString = sharedPreferences.getString("GaussValueAfter", "0.0");
 
         double sigmaBefore = parseDouble(sigmaBeforeString);
         double sigmaAfter = parseDouble(sigmaAfterString);
@@ -700,11 +708,35 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
         saySomething(fullDescription);
         //Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
     }
+    private void sayScreenandActionsUncalibrated(String currentScreen){
+        getScreenDescription(currentScreen);
 
+        String actions = screenDescriptions.getActions(currentScreen);
+
+        saySomething(actions);
+        //Toast.makeText(this, fullDescription , Toast.LENGTH_SHORT).show();
+    }
     // returns true if the screen is correctly calibrated
     private boolean calibrateScreen(Rect boundary){
         //Log.d()
-        return true;
+        //aspect ratrio 608x185 3.3
+        //539 156 , 3.45
+        //556x167 3.3
+        //real 3.333
+        if(boundary==null)
+            return false;
+        double tolerance=.38;
+        double aspectRatio=3.3333;
+        double ratio=((double)boundary.width)/boundary.height;
+        Log.i("Calibrate screen","width:"+boundary.width+",height:"+boundary.height+"ratio"+ratio);
+
+        if((ratio>aspectRatio+tolerance)||(ratio<aspectRatio-tolerance)) {
+            Log.i("Calibrate screen","value false");
+            return false;
+        }else{
+            Log.i("Calibrate screen","value true");
+            return true;
+        }
     }
 }
 

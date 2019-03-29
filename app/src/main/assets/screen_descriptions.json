@@ -61,6 +61,13 @@
       "Advanced": "Screen is not supported."
     },
     "Actions": "Press one to go back to the home page."
+  },
+  "Uncalibrated": {
+    "Description": {
+      "Beginner": "The screen is not in view.",
+      "Advanced": "The screen is not in view"
+    },
+    "Actions": "Please point the camera at the screen"
   }
 }
 

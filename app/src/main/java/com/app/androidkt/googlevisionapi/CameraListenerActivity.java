@@ -1,11 +1,10 @@
 package com.app.androidkt.googlevisionapi;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewDebug;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -39,7 +37,6 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -53,17 +50,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.preference.PreferenceManager;
 
-import static android.speech.tts.TextToSpeech.getMaxSpeechInputLength;
 import static java.lang.Double.parseDouble;
 import static java.lang.Float.parseFloat;
-import static java.lang.Integer.getInteger;
-import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
 import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
@@ -567,6 +560,24 @@ public class CameraListenerActivity extends Activity implements CvCameraViewList
     // reads any touch events
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
+        // check for multi tap
+        int action = event.getAction() & MotionEvent.ACTION_MASK;
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_MOVE:
+                // mute if multi-touch with 2 fingers
+                int pointerCount = event.getPointerCount();
+                if (pointerCount == 2) {
+                    tts.playSilentUtterance(1,TextToSpeech.QUEUE_FLUSH,null);
+                }
+        }
+
         // checks if the touch event matches any of the motion events events below
         if (this.mDetector.onTouchEvent(event)) {
             //Toast.makeText(this,"returning true", Toast.LENGTH_SHORT).show();

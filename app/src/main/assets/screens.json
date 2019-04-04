@@ -10,13 +10,6 @@
       }
     },
     {
-      "description": "Category",
-      "boundingPoly": {
-        "vertices": [
-        ]
-      }
-    },
-    {
       "description": "USR",
       "boundingPoly": {
         "vertices": [
@@ -24,7 +17,7 @@
       }
     },
     {
-      "description": "Common",
+      "description": "Zone",
       "boundingPoly": {
         "vertices": [
         ]
@@ -33,13 +26,6 @@
   ],
   "Song":
   [
-    {
-      "description": "SONG",
-      "boundingPoly": {
-        "vertices": [
-        ]
-      }
-    },
     {
       "description": "Meas",
       "boundingPoly": {
@@ -57,13 +43,6 @@
   ],
   "Record":
   [
-    {
-      "description": "SONG",
-      "boundingPoly": {
-        "vertices": [
-        ]
-      }
-    },
     {
       "description": "RecTr",
       "boundingPoly": {
@@ -84,24 +63,10 @@
         "vertices": [
         ]
       }
-    },
-    {
-      "description": "Overdub",
-      "boundingPoly": {
-        "vertices": [
-        ]
-      }
     }
   ],
   "Voice":
   [
-    {
-      "description": "SONG",
-      "boundingPoly": {
-        "vertices": [
-        ]
-      }
-    },
     {
       "description": "Volume",
       "boundingPoly": {

@@ -122,6 +122,13 @@
         "vertices": [
         ]
       }
+    },
+    {
+      "description": "Voice",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
     }
   ],
   "Store":

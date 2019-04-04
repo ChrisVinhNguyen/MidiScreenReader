@@ -44,6 +44,13 @@
   "Record":
   [
     {
+      "description": "Song",
+      "boundingPoly": {
+        "vertices": [
+        ]
+      }
+    },
+    {
       "description": "RecTr",
       "boundingPoly": {
         "vertices": [
@@ -68,21 +75,21 @@
   "Voice":
   [
     {
-      "description": "Volume",
+      "description": "Song",
       "boundingPoly": {
         "vertices": [
         ]
       }
     },
     {
-      "description": "InsEF",
+      "description": "Pan",
       "boundingPoly": {
         "vertices": [
         ]
       }
     },
     {
-      "description": "Voice",
+      "description": "Insef",
       "boundingPoly": {
         "vertices": [
         ]

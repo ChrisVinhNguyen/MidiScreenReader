@@ -103,13 +103,6 @@
       }
     },
     {
-      "description": "Pan",
-      "boundingPoly": {
-        "vertices": [
-        ]
-      }
-    },
-    {
       "description": "Volume",
       "boundingPoly": {
         "vertices": [
